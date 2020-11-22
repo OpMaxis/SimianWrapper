@@ -10,6 +10,7 @@
 
 from customFunctions import errorHandler
 from PyQt5 import QtCore, QtGui, QtWidgets
+import sys
 
 
 class Ui_ErrorDialog(object):
@@ -32,3 +33,11 @@ class Ui_ErrorDialog(object):
         _translate = QtCore.QCoreApplication.translate
         ErrorDialog.setWindowTitle(_translate("ErrorDialog", "Dialog"))
         self.ErrorText.setText(_translate("ErrorDialog", "An error has occurred. "))
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    ErrorDialog = QtWidgets.QDialog()
+    ui = Ui_ErrorDialog()
+    ui.setupUi(ErrorDialog)
+    ErrorDialog.show()
+    sys.exit(app.exec_())
