@@ -22,17 +22,19 @@ import yaml
 import getopt
 
 
-# This code is the general use for all times a file directory will be accessed
-def browseDir(self):
-    dialog = QtCore.QFileDialog(self)
-    dialog.setFileMode(QtWidgets.QFileDialog.Directory)
-    dialog.setFileMode(QtWidgets.QFileDialog.List)
-    dialog.Option.showDirsOnly()
-    if dialog.exec_():
-        dirName = dialog.selectedFiles()
-        dialog.setDirectory(dirName)
-        dialog.QLineEdit.setText(dirName)
-    # TODO: Unit Tests
+class customFunctions():
+    # This code is the general use for all times a file directory will be accessed
+    def browseDir(self):
+        dialog = QtCore.QFileDialog(self)
+        dialog.setFileMode(QtWidgets.QFileDialog.Directory)
+        dialog.setFileMode(QtWidgets.QFileDialog.List)
+        dialog.Option.showDirsOnly()
+        if dialog.exec_():
+            dirName = dialog.selectedFiles()
+            dialog.setDirectory(dirName)
+            dialog.QLineEdit.setText(dirName)
+            # TODO: Unit Tests
+
 
 # -This code runs Simian by calling the CLI arguments and using simianFileDir
 # for the directory that was is listed. If no directory is given, error message
@@ -46,7 +48,8 @@ def runSimian(self, simianFileDir):
     else:
         # yamlFile = open((os.path.join(os.pardir, 'settings.yaml')))
         with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFile:
-            data = yaml.load(yamlFile, Loader=yaml.FullLoader)
+            settingsFile = yaml.load(yamlFile, Loader=yaml.FullLoader)
+            print(settingsFile)
             # TODO: if-else loop which checks for valid data in savedDataArray
             # if there is saved settings, use those options from the array
             # else, use defaults
@@ -54,7 +57,6 @@ def runSimian(self, simianFileDir):
         # args = str(sys.argv)
         # nums = len(sys.argv)
         # yamlFile.close()
-    pass
 
 
 # -This code runs Kdiff3 directly by using the directory.
