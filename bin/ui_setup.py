@@ -25,7 +25,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from customFunctions import browseDir, saveSettings, resetDefaults
+from qtFunctions import browseDir, saveSettings, resetDefaults
 import sys
 
 
@@ -464,11 +464,11 @@ class Ui_SimianSetup(object):
         self.SimianThresholdLabel.setToolTip(_translate("SimianSetup", "<html><head/><body><p>Matches will contain at least the specified number of lines. Must be at least 2.</p></body></html>"))
         self.SimianThresholdLabel.setText(_translate("SimianSetup", "Threshold"))
 
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    SimianSetup = QtWidgets.QMainWindow()
-    ui = Ui_SimianSetup()
-    ui.setupUi(SimianSetup)
-    SimianSetup.show()
-    sys.exit(app.exec_())
+    def __init__():
+        if __name__ == "__main__":
+            app = QtWidgets.QApplication(sys.argv)
+            SimianSetup = QtWidgets.QMainWindow()
+            ui = Ui_SimianSetup()
+            ui.setupUi(SimianSetup)
+            SimianSetup.show()
+            sys.exit(app.exec_())

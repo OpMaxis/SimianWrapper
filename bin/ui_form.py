@@ -24,7 +24,7 @@
 #################
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from customFunctions import browseDir, runSimian, runKdiff3, openSetup
+from qtFunctions import browseDir, runSimian, runKdiff3, openSetup
 import sys
 
 
@@ -189,6 +189,7 @@ class Ui_SimianWindow(object):
         self.pushButton_2.setText(_translate("SimianWindow", "Setup"))
         self.actionClear_Results.setText(_translate("SimianWindow", "Clear Results"))
         self.actionSave_Results.setText(_translate("SimianWindow", "Save Results"))
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

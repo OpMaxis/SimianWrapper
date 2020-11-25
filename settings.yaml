@@ -1,5 +1,6 @@
-# These settings will be loaded if no other settings are saved.
-simianFileOptionsDefault:
+# These settings will be loaded when the user saves settings and used
+# until the user chooses to reset to defaults.
+simianFileOptionsSaved:
   FailOnDupl: True
   IgnoreCurlyBraces: False
   IgnoreIdent: False
@@ -16,26 +17,6 @@ simianFileOptionsDefault:
   BalanceParentheses: False
   BalanceSquareBrackets: False
   Threshold: 2
-
-# These settings will be loaded when the user saves settings and used
-# until the user chooses to reset to defaults.
-simianFileOptionsSaved:
-  FailOnDupl:
-  IgnoreCurlyBraces:
-  IgnoreIdent:
-  IgnoreIdentCase:
-  IgnoreLiterals:
-  IgnoreNumbers:
-  IgnoreCharacters:
-  IgnoreCharacterCase:
-  IgnoreStrings:
-  IgnoreStringCase:
-  IgnoreSubtypeNames:
-  IgnoreModifiers:
-  IgnoreVariableNames:
-  BalanceParentheses:
-  BalanceSquareBrackets:
-  Threshold:
 
 fileDirsSaved:
   SimianWorkFileDir:

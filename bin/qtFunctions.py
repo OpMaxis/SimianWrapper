@@ -16,6 +16,9 @@
 #################
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from ui_error import Ui_ErrorDialog
+from ui_form import Ui_SimianWindow
+from ui_setup import Ui_SimianSetup
 import sys
 import os
 import yaml
@@ -42,9 +45,11 @@ class qtFunctions(QtCore.QObject):
 
     # -This code opens the setupUi widget from the form.ui
     @QtCore.pyqtSlot()
-    def openSetup(self):
+    def openSetup(self, checked):
         # Code here
-        self.setupUi = Ui_SimianSetup(self)
+        if self.setupWindow is None:
+            self.setupWindow = Ui_SimianSetup.setupUi(self, self.setupWindow)
+        self.setupWindow.show()
         # NOTE pseudocode block:
         # call setupUi SimianSetupWidget from ui_setup.py
         # open the widget as a secondary window for SimianWrapper
@@ -58,7 +63,9 @@ class qtFunctions(QtCore.QObject):
     def runKdiff3(self, kDiff3FileDir):
         # Code here
         if kDiff3FileDir is None:
-            qtFunctions.qerrorHandler(self, FileNotFoundError)
+            qtFunctions.errorHandler(self, FileNotFoundError)
+        else:
+            Ui_SimianSetup
         pass
 
     # -This code runs Simian by calling the CLI arguments and using
@@ -98,7 +105,7 @@ class qtFunctions(QtCore.QObject):
     @QtCore.pyqtSlot()
     def saveSettings(self):
         with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFileSaved:
-
+            settingsFile = yaml.load(yamlFileSaved, Loader=yaml.FullLoader)
         # NOTE pseudocode block
         # with open yamlFile:
         #   call dictionary for simianFileOptionsSaved
@@ -124,6 +131,17 @@ class qtFunctions(QtCore.QObject):
     # - This code is called for whenever an error is called by any means
     @QtCore.pyqtSlot()
     def errorHandler(self, ErrorEvent):
+        if self.errorWidget.isVisible():
+            self.errorWidget.hide()
+        else:
+            self.errorWidget = Ui_ErrorDialog.setupUi(self.errorWidget)
+            self.errorWidget.retranslateUi(self.errorWidget)
+            if ErrorEvent is FileNotFoundError:
+                self.errorWidget.ErrorText.setText(_translate("ErrorDialog",
+                "Invalid directories. Please check your saved directories. "))
+            else:
+                self.ErrorText.setText(_translate("ErrorDialog", "An error has occurred. "))
+            self.errorWidget.show()
         # NOTE pseudocode block
         # call setupUi SimianErrorWidget from ui_error.py
         # open the widget as a secondary window for SimianWrapper
