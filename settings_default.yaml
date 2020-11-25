@@ -1,0 +1,22 @@
+# These settings will be loaded if no other settings are saved.
+simianFileOptionsDefault:
+  FailOnDupl: True
+  IgnoreCurlyBraces: False
+  IgnoreIdent: False
+  IgnoreIdentCase: True
+  IgnoreLiterals: False
+  IgnoreNumbers: False
+  IgnoreCharacters: False
+  IgnoreCharacterCase: True
+  IgnoreStrings: False
+  IgnoreStringCase: True
+  IgnoreSubtypeNames: False
+  IgnoreModifiers: True
+  IgnoreVariableNames: False
+  BalanceParentheses: False
+  BalanceSquareBrackets: False
+  Threshold: 2
+
+fileDirsSaved:
+  SimianWorkFileDir:
+  kDiff3WorkFileDir:
