@@ -1,23 +1,46 @@
+# These settings will be loaded if no other settings are saved.
+---
+simianFileOptionsDefault:
+  failOnDuplication: True
+  ignoreCurlyBraces: False
+  ignoreIdent: False
+  ignoreIdentCase: True
+  ignoreLiterals: False
+  ignoreNumbers: False
+  ignoreCharacters: False
+  ignoreCharacterCase: True
+  ignoreStrings: False
+  ignoreStringCase: True
+  ignoreSubtypeNames: False
+  ignoreModifiers: True
+  ignoreVariableNames: False
+  balanceParentheses: False
+  balanceSquareBrackets: False
+  threshold: 2
+---
 # These settings will be loaded when the user saves settings and used
 # until the user chooses to reset to defaults.
 simianFileOptionsSaved:
-  FailOnDupl: True
-  IgnoreCurlyBraces: False
-  IgnoreIdent: False
-  IgnoreIdentCase: True
-  IgnoreLiterals: False
-  IgnoreNumbers: False
-  IgnoreCharacters: False
-  IgnoreCharacterCase: True
-  IgnoreStrings: False
-  IgnoreStringCase: True
-  IgnoreSubtypeNames: False
-  IgnoreModifiers: True
-  IgnoreVariableNames: False
-  BalanceParentheses: False
-  BalanceSquareBrackets: False
-  Threshold: 2
-
+  failOnDuplication: True
+  ignoreCurlyBraces: False
+  ignoreIdent: False
+  ignoreIdentCase: True
+  ignoreLiterals: False
+  ignoreNumbers: False
+  ignoreCharacters: False
+  ignoreCharacterCase: True
+  ignoreStrings: False
+  ignoreStringCase: True
+  ignoreSubtypeNames: False
+  ignoreModifiers: True
+  ignoreVariableNames: False
+  balanceParentheses: False
+  balanceSquareBrackets: False
+  threshold: 2
+---
+kdiff3OptionsSaved:
+  outputFile:
+---
 fileDirsSaved:
   SimianWorkFileDir:
   kDiff3WorkFileDir:

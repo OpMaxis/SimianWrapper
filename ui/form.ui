@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>754</width>
-    <height>398</height>
+    <width>799</width>
+    <height>357</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -36,43 +36,10 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0" rowspan="4">
      <layout class="QGridLayout" name="ResultsGrid">
-      <item row="1" column="1" colspan="3">
-       <widget class="QScrollBar" name="ResultsHScroll">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2" colspan="2">
-       <widget class="QPushButton" name="pushButton_4">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clear the list of the results.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Clear Results</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QScrollBar" name="ResultsVScroll">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <item row="1" column="1">
        <widget class="QPushButton" name="pushButton_3">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -89,12 +56,61 @@
        </widget>
       </item>
       <item row="0" column="1" colspan="3">
-       <widget class="QListView" name="ResultsTable">
+       <widget class="QTreeWidget" name="ResultsTable">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="tabKeyNavigation">
+         <bool>true</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::ExtendedSelection</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="columnCount">
+         <number>1</number>
+        </property>
+        <column>
+         <property name="text">
+          <string>Simian Duplicate Results</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item row="1" column="2" colspan="2">
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clear the list of the results.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Clear Results</string>
         </property>
        </widget>
       </item>
@@ -247,7 +263,7 @@ p, li { white-space: pre-wrap; }
    <slot>browseDir()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>724</x>
+     <x>958</x>
      <y>28</y>
     </hint>
     <hint type="destinationlabel">
@@ -263,8 +279,8 @@ p, li { white-space: pre-wrap; }
    <slot>runSimian()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>477</x>
-     <y>367</y>
+     <x>538</x>
+     <y>386</y>
     </hint>
     <hint type="destinationlabel">
      <x>333</x>
@@ -279,8 +295,8 @@ p, li { white-space: pre-wrap; }
    <slot>openSetup()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>641</x>
-     <y>367</y>
+     <x>795</x>
+     <y>386</y>
     </hint>
     <hint type="destinationlabel">
      <x>734</x>
@@ -296,11 +312,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>67</x>
-     <y>347</y>
+     <y>386</y>
     </hint>
     <hint type="destinationlabel">
-     <x>536</x>
-     <y>359</y>
+     <x>330</x>
+     <y>349</y>
     </hint>
    </hints>
   </connection>
@@ -308,47 +324,15 @@ p, li { white-space: pre-wrap; }
    <sender>pushButton_4</sender>
    <signal>clicked()</signal>
    <receiver>ResultsTable</receiver>
-   <slot>reset()</slot>
+   <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>200</x>
-     <y>356</y>
+     <x>202</x>
+     <y>372</y>
     </hint>
     <hint type="destinationlabel">
-     <x>242</x>
-     <y>295</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>pushButton_4</receiver>
-   <slot>toggle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>397</x>
-     <y>355</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>238</x>
-     <y>358</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>pushButton_3</receiver>
-   <slot>toggle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>408</x>
-     <y>346</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>76</x>
-     <y>362</y>
+     <x>239</x>
+     <y>280</y>
     </hint>
    </hints>
   </connection>

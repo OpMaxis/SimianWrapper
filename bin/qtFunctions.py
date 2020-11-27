@@ -23,10 +23,14 @@ import sys
 import os
 import yaml
 import getopt
+import subprocess
 
 
 # qtFunctions carries out the custom slots defined in the ui python files
 class qtFunctions(QtCore.QObject):
+
+    # Define a custom signal that carries the string of the file name
+    opened = QtCore.pyqtSignal(str, name='fileDir')
 
     # This code is the general use for all times a file directory will be
     # accessed
@@ -34,7 +38,7 @@ class qtFunctions(QtCore.QObject):
     def browseDir(self):
         dialog = QtCore.QFileDialog(self)
         dialog.setFileMode(QtWidgets.QFileDialog.Directory)
-        dialog.setFileMode(QtWidgets.QFileDialog.List)
+        # dialog.setFileMode(QtWidgets.QFileDialog.List)
         dialog.Option.showDirsOnly()
         if dialog.exec_():
             dirName = dialog.selectedFiles()
@@ -48,7 +52,8 @@ class qtFunctions(QtCore.QObject):
     def openSetup(self, checked):
         # Code here
         if self.setupWindow is None:
-            self.setupWindow = Ui_SimianSetup.setupUi(self, self.setupWindow)
+            self.setupWindow = Ui_SimianSetup.setupUi(self.setupWindow)
+            self.setupWindow = Ui_SimianSetup.retranslateUi(self.setupWindow)
         self.setupWindow.show()
         # NOTE pseudocode block:
         # call setupUi SimianSetupWidget from ui_setup.py
@@ -60,12 +65,26 @@ class qtFunctions(QtCore.QObject):
     # If no directory is given, error message will be processed
     # Otherwise.
     @QtCore.pyqtSlot()
-    def runKdiff3(self, kDiff3FileDir):
+    def runKdiff3(self):
         # Code here
-        if kDiff3FileDir is None:
-            qtFunctions.errorHandler(self, FileNotFoundError)
-        else:
-            Ui_SimianSetup
+        fileList = self.ResultsTable.selectedItems()
+        file1 = fileList[0]
+        file2 = fileList[1]
+        file3 = fileList[2]
+        with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFile:
+            newFileName = yaml.load(yamlFile, Loader=yaml.FullLoader)
+            compareFile = newFileName.get("outputFile")
+            kDiff3FileDir = newFileName.get("kDiff3WorkFileDir")
+            if kDiff3FileDir or file1 or file2 is None:
+                qtFunctions.errorHandler(self, FileNotFoundError)
+            elif Ui_SimianSetup.Kdiff3MergeButton.isChecked() and compareFile is not None:
+                process = subprocess.Popen(str[kDiff3FileDir, file1, file2, file3, newFileName])
+            elif Ui_SimianSetup.Kdiff3MergeButton.isChecked() and compareFile is None:
+                process = subprocess.Popen(str[kDiff3FileDir, file1, file2, file3])
+            elif not Ui_SimianSetup.Kdiff3MergeButton.isChecked():
+                process = subprocess.Popen(str[kDiff3FileDir, file1, file2])
+            else:
+                qtFunctions.errorHandler(self, RuntimeError)
         pass
 
     # -This code runs Simian by calling the CLI arguments and using
@@ -74,24 +93,48 @@ class qtFunctions(QtCore.QObject):
     # -The second effect will be producing the results by reading the CLI lines
     # directly from prompt
     @QtCore.pyqtSlot()
-    def runSimian(self, simianFileDir):
+    def runSimian(self):
+        self.openedFileDir = QtGui.QLineEdit()
         # Code here
-        if simianFileDir is None:
+        if self.openedFileDir is None:
             qtFunctions.errorHandler(self, FileNotFoundError)
         else:
             # yamlFile = open((os.path.join(os.pardir, 'settings.yaml')))
             with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFile:
-                settingsFile = yaml.load(yamlFile, Loader=yaml.FullLoader)
-
-                if settingsFile.get("SimianWorkFileDir") \
-                        is None:
+                # safe_load_all calls a generator object which we iterate over
+                settingsFile = yaml.safe_load_all(yamlFile)
+                # This would call simianFileOptionsDefault, which we do not need
+                settingsFile.__next__()
+                # We save the second dictionary document
+                simianFileOptionsSaved = settingsFile.__next__()
+                # This is kdDiff3SavedSettings, which we do not need
+                settingsFile.__next__()
+                # we, however, need fileDirsSaved
+                fileDirsSaved = settingsFile.__next__()
+                # a for loop breaks the content because it will iterate over the other
+                # dictionaries, and a while loop
+                simianWorkFileDir = fileDirsSaved['fileDirsSaved'] \
+                    .get('SimianWorkFileDir')
+                if simianWorkFileDir is None:
+                    qtFunctions.errorHandler(self, FileNotFoundError)
                     print("There are no results")
                     print(settingsFile.values())
                     # use defaults to render the results
                 else:
                     print("There are results")
-                    print(settingsFile.values())
-
+                    settingsList = simianFileOptionsSaved.get('simianFileOptionsSaved')
+                    for value in settingsList.values():
+                        if value is True:
+                            # Convert True to + symbol for Simian
+                            settingsList[value] = "+"
+                        elif value is False:
+                            # Convert False to - symbol for Simian
+                            settingsList[value] = "-"
+                        else:
+                            # If the value is not truthy or falsy, move on
+                            break
+                        settingsList['simianFileOptionsSaved'].items()
+                    executedArgs = subprocess.Popen(str[simianWorkFileDir, ,self.openedFileDir])
                 # TODO: if-else loop which checks for valid data
                 # in savedDataArray
                 # if there is saved settings, use those options from the array
@@ -106,6 +149,16 @@ class qtFunctions(QtCore.QObject):
     def saveSettings(self):
         with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFileSaved:
             settingsFile = yaml.load(yamlFileSaved, Loader=yaml.FullLoader)
+            # safe_load_all calls a generator object which we iterate over
+            settingsFile = yaml.safe_load_all(yamlFile)
+            # We need to reference default file options for saveSettings
+            simianFileOptionsDefault = settingsFile.__next__()
+            # We save the second dictionary document for the saved settings
+            simianFileOptionsSaved = settingsFile.__next__()
+            # This is kdDiff3SavedSettings, which we do not need
+            settingsFile.__next__()
+            # we, however, need fileDirsSaved
+            fileDirsSaved = settingsFile.__next__()
         # NOTE pseudocode block
         # with open yamlFile:
         #   call dictionary for simianFileOptionsSaved
@@ -121,11 +174,22 @@ class qtFunctions(QtCore.QObject):
     @QtCore.pyqtSlot()
     def resetDefaults(self):
         with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFileSaved:
-            with open((os.path.join(os.pardir, 'settings_defaults.yaml'))) \
-                    as yamlFileDefault:
-                settingsFileDefault = yaml.load(yamlFileDefault, Loader=yaml.FullLoader)
-                settingsFileSaved = settingsFileDefault.copy()
-                yaml.dump(settingsFileSaved, stream=yamlFileSaved)
+            # safe_load_all calls a generator object which we iterate over
+            settingsFile = yaml.safe_load_all(yamlFileSaved)
+            # We need to reference default file options for saveSettings
+            simianFileOptionsDefault = settingsFile.__next__()
+            # We save the second dictionary document for the saved settings
+            simianFileOptionsSaved = settingsFile.__next__()
+            # This is kdDiff3SavedSettings, which we do not need
+            settingsFile.__next__()
+            # we do not need to update fileDirsSaved, only
+            # simianFileOptionsSaved
+            settingsFile.__next__()
+            simianFileOptionsSaved.update(simianFileOptionsDefault)
+            # TODO: reset the boolean checked states and values according to
+            # the saved values in simianFileOptionsSaved or
+            # simianFileOptionsDefault, whichever turns out to be easier
+            yaml.safe_dump(simianFileOptionsSaved, stream=yamlFileSaved)
         print("Default settings reset")
 
     # - This code is called for whenever an error is called by any means
@@ -138,7 +202,7 @@ class qtFunctions(QtCore.QObject):
             self.errorWidget.retranslateUi(self.errorWidget)
             if ErrorEvent is FileNotFoundError:
                 self.errorWidget.ErrorText.setText(_translate("ErrorDialog",
-                "Invalid directories. Please check your saved directories. "))
+                    "Invalid directories. Please check your saved directories. "))
             else:
                 self.ErrorText.setText(_translate("ErrorDialog", "An error has occurred. "))
             self.errorWidget.show()
