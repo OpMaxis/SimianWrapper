@@ -77,10 +77,14 @@ class qtFunctions(QtCore.QObject):
             kDiff3FileDir = newFileName.get("kDiff3WorkFileDir")
             if kDiff3FileDir or file1 or file2 is None:
                 qtFunctions.errorHandler(self, FileNotFoundError)
-            elif Ui_SimianSetup.Kdiff3MergeButton.isChecked() and compareFile is not None:
-                process = subprocess.Popen(str[kDiff3FileDir, file1, file2, file3, newFileName])
-            elif Ui_SimianSetup.Kdiff3MergeButton.isChecked() and compareFile is None:
-                process = subprocess.Popen(str[kDiff3FileDir, file1, file2, file3])
+            elif Ui_SimianSetup.Kdiff3MergeButton.isChecked() and compareFile \
+                    is not None:
+                process = subprocess.Popen(str[kDiff3FileDir, file1, file2,
+                                            file3, newFileName])
+            elif Ui_SimianSetup.Kdiff3MergeButton.isChecked() \
+                    and compareFile is None:
+                process = subprocess.Popen(str[kDiff3FileDir, file1, file2,
+                                            file3])
             elif not Ui_SimianSetup.Kdiff3MergeButton.isChecked():
                 process = subprocess.Popen(str[kDiff3FileDir, file1, file2])
             else:
@@ -94,10 +98,14 @@ class qtFunctions(QtCore.QObject):
     # directly from prompt
     @QtCore.pyqtSlot()
     def runSimian(self):
+        # Initialize combined string as an empty string, which will be populated
+        # later
+        combinedString = ""
         self.openedFileDir = QtGui.QLineEdit()
-        # Code here
+        # If there is no file directory to run simian on, end early with error
         if self.openedFileDir is None:
             qtFunctions.errorHandler(self, FileNotFoundError)
+        # otherwise, run through runSimian
         else:
             # yamlFile = open((os.path.join(os.pardir, 'settings.yaml')))
             with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFile:
@@ -112,29 +120,41 @@ class qtFunctions(QtCore.QObject):
                 # we, however, need fileDirsSaved
                 fileDirsSaved = settingsFile.__next__()
                 # a for loop breaks the content because it will iterate over the other
-                # dictionaries, and a while loop
+                # dictionaries, and a while loop would cause local encapsulaton which
+                # we do not want
+
+                # get the workfileDirectory of Simian by looking through
+                # the subdirectory fileDirsSaved
                 simianWorkFileDir = fileDirsSaved['fileDirsSaved'] \
                     .get('SimianWorkFileDir')
+                # If the workfileDirectory has not been defined yet, end early
                 if simianWorkFileDir is None:
                     qtFunctions.errorHandler(self, FileNotFoundError)
-                    print("There are no results")
-                    print(settingsFile.values())
-                    # use defaults to render the results
+                # Otherwise, continue onwards
                 else:
-                    print("There are results")
-                    settingsList = simianFileOptionsSaved.get('simianFileOptionsSaved')
-                    for value in settingsList.values():
+                    # create a dictionary of simianFileOptionsSaved that only
+                    # grabs the subdirectory to save typing in the future
+                    simianNestedDict = simianFileOptionsSaved
+                    ['simianFileOptionsSaved']
+                    # For the key value pairs in the nested dictionary...
+                    for key, value in simianNestedDict.items():
+                        # if the value is truthy, update the value pair to be
+                        # + with space
                         if value is True:
-                            # Convert True to + symbol for Simian
-                            settingsList[value] = "+"
+                            updatedValue = simianNestedDict[key] = '+'
+                            combinedString += '-' + key + updatedValue
+                        # else, if the value is falsy, update the value pair to be
+                        # - with space
                         elif value is False:
-                            # Convert False to - symbol for Simian
-                            settingsList[value] = "-"
+                            updatedValue = simianNestedDict[key] = '-'
+                            combinedString += '-' + key + updatedValue + ' '
+                        # if the value is not a truthy or falsy value...
+                        # see threshold, which is an integer
                         else:
-                            # If the value is not truthy or falsy, move on
-                            break
-                        settingsList['simianFileOptionsSaved'].items()
-                    executedArgs = subprocess.Popen(str[simianWorkFileDir, ,self.openedFileDir])
+                            combinedString += '-' + key + '=' + str(value) + ' '
+                            continue
+                    executedArgs = subprocess.Popen
+                    (str[simianWorkFileDir, combinedString, self.openedFileDir])
                 # TODO: if-else loop which checks for valid data
                 # in savedDataArray
                 # if there is saved settings, use those options from the array

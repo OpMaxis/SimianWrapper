@@ -3,8 +3,8 @@
 simianFileOptionsDefault:
   failOnDuplication: True
   ignoreCurlyBraces: False
-  ignoreIdent: False
-  ignoreIdentCase: True
+  ignoreIdentifiers: False
+  ignoreIdentiferCase: True
   ignoreLiterals: False
   ignoreNumbers: False
   ignoreCharacters: False
@@ -23,8 +23,8 @@ simianFileOptionsDefault:
 simianFileOptionsSaved:
   failOnDuplication: True
   ignoreCurlyBraces: False
-  ignoreIdent: False
-  ignoreIdentCase: True
+  ignoreIdentifiers: False
+  ignoreIdentiferCase: True
   ignoreLiterals: False
   ignoreNumbers: False
   ignoreCharacters: False
