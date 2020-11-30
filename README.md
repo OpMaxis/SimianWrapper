@@ -13,7 +13,7 @@ https://www.gnu.org/licenses/gpl-3.0.en.html
 
 The sources for the following programs that are utilized by SimianWrapper:
 
-Simian: https://www.harukizaemon.com/simian/index.html 
+Simian: https://www.harukizaemon.com/simian/index.html
 
 KDiff3: http://kdiff3.sourceforge.net/
 
@@ -21,9 +21,10 @@ This codebase is run on Python 3.9.0, found here; https://www.python.org/downloa
 
 The following dependencies are called by SimianWrapper:
 
+os: https://docs.python.org/3/library/os.html
+
 PyYAML: https://pyyaml.org/
 
 PyQt5: https://pypi.org/project/PyQt5/
 
-
-
+subprocess: https://docs.python.org/3/library/subprocess.html

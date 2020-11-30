@@ -25,6 +25,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 # from qtFunctions import browseDir, runKdiff3, openSetup, errorHandler
+import Ui_SimianSetup
 import sys
 import os
 import subprocess
@@ -51,8 +52,7 @@ class Ui_SimianWindow(QtCore.QObject):
     def openSetup(self, checked):
         # Code here
         if self.setupWindow is None:
-            self.setupWindow = Ui_SimianSetup.setupUi(self.setupWindow)
-            self.setupWindow = Ui_SimianSetup.retranslateUi(self.setupWindow)
+            self.setupWindow = Ui_SimianSetup.main()
         self.setupWindow.show()
         # NOTE pseudocode block:
         # call setupUi SimianSetupWidget from ui_setup.py
@@ -366,3 +366,5 @@ class Ui_SimianWindow(QtCore.QObject):
         ui.setupUi(SimianWindow)
         SimianWindow.show()
         sys.exit(app.exec_())
+
+    main()
