@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>799</width>
-    <height>357</height>
+    <width>780</width>
+    <height>390</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -34,123 +34,230 @@
   </property>
   <widget class="QWidget" name="MainContents">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" rowspan="4">
-     <layout class="QGridLayout" name="ResultsGrid">
-      <item row="1" column="1">
-       <widget class="QPushButton" name="pushButton_3">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open the selected files in Kdiff3 with the given settings in Setup.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Open Selected in Kdiff3</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="3">
-       <widget class="QTreeWidget" name="ResultsTable">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="tabKeyNavigation">
-         <bool>true</bool>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::ExtendedSelection</enum>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <property name="columnCount">
-         <number>1</number>
-        </property>
-        <column>
-         <property name="text">
-          <string>Simian Duplicate Results</string>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="textAlignment">
-          <set>AlignCenter</set>
-         </property>
-        </column>
-       </widget>
-      </item>
-      <item row="1" column="2" colspan="2">
-       <widget class="QPushButton" name="pushButton_4">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clear the list of the results.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Clear Results</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    <item row="9" column="7">
+     <widget class="QPushButton" name="simianSetupButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Opens the setup, which allows you to set the working file directory where your Simian and Kdiff3 installation is located, as well as command line options.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Setup</string>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+     </widget>
     </item>
-    <item row="0" column="1">
-     <layout class="QHBoxLayout" name="FileDirectoryContents">
-      <item>
-       <widget class="QLabel" name="FileDirectoryName">
-        <property name="font">
-         <font>
-          <pointsize>10</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>File Directory</string>
-        </property>
-        <property name="buddy">
-         <cstring>FileDirectoryText</cstring>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="FileDirectoryText"/>
-      </item>
-      <item>
-       <widget class="QToolButton" name="FileDirectoryButton">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the directory that you will be analyzing with Simian.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>...</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    <item row="9" column="0" colspan="2">
+     <widget class="QPushButton" name="openKdiff3Button">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open the selected files in Kdiff3 with the given settings in Setup.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Open Selected in Kdiff3</string>
+      </property>
+     </widget>
     </item>
-    <item row="2" column="1">
+    <item row="6" column="6">
+     <widget class="QLabel" name="Kdiff3OutFileName">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Name of Output file generated by merge result.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Output File Name</string>
+      </property>
+      <property name="buddy">
+       <cstring>Kdiff3OutputLine</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="3" colspan="8">
+     <widget class="Line" name="SimianFileToKdiffLine">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="6">
+     <widget class="QRadioButton" name="Kdiff3MergeButton">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Merge the input.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Merge</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="3" rowspan="2" colspan="2">
+     <widget class="QLabel" name="Kdiff3FileOptionsLabel">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Kdiff3 File Options</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="5">
+     <widget class="QCheckBox" name="Kdiff3OutputCheck">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="toolTip">
+       <string>Output a merged file into a new file. (Not available in Compare.)</string>
+      </property>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="5">
+     <widget class="QRadioButton" name="Kdfiff3CompareButton">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Compares the results given in the base form.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Compare</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="2">
+     <widget class="QPushButton" name="clearResultsButton">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clear the list of the results.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Clear Results</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="5">
+     <widget class="QPushButton" name="simianLaunchButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Helvetica'; font-size:12px; color:#000000; background-color:#f8f9fa;&quot;&gt;Launches the Simian program with the file directory listed in Setup to compare the files. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Helvetica'; font-size:12px; color:#000000; background-color:#f8f9fa;&quot;&gt;If files are listed, only the compared files will be listed in the Duplicate View.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Launch with Simian</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="3">
+     <widget class="QLabel" name="SimianResultsLabel">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Simian Results Table</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QLabel" name="FileDirectoryName">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>File Directory</string>
+      </property>
+      <property name="buddy">
+       <cstring>FileDirectoryText</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="10">
+     <widget class="QToolButton" name="FileDirectoryButton">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the directory that you will be analyzing with Simian.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4" colspan="6">
+     <widget class="QLineEdit" name="FileDirectoryText"/>
+    </item>
+    <item row="1" column="0" rowspan="6" colspan="3">
+     <widget class="QListWidget" name="ResultsTable">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="tabKeyNavigation">
+       <bool>true</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::ExtendedSelection</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3" rowspan="3" colspan="8">
      <widget class="QTextEdit" name="textEdit">
       <property name="enabled">
        <bool>true</bool>
@@ -186,49 +293,18 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
-      <item>
-       <widget class="QPushButton" name="pushButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>8</pointsize>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Helvetica'; font-size:12px; color:#000000; background-color:#f8f9fa;&quot;&gt;Launches the Simian program with the file directory listed in Setup to compare the files. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Helvetica'; font-size:12px; color:#000000; background-color:#f8f9fa;&quot;&gt;If files are listed, only the compared files will be listed in the Duplicate View.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Launch with Simian</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Opens the setup, which allows you to set the working file directory where your Simian and Kdiff3 installation is located, as well as command line options.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Setup</string>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    <item row="6" column="7" colspan="4">
+     <widget class="QLineEdit" name="Kdiff3OutputLine">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>10</height>
+       </size>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -246,13 +322,17 @@ p, li { white-space: pre-wrap; }
  </widget>
  <tabstops>
   <tabstop>ResultsTable</tabstop>
+  <tabstop>textEdit</tabstop>
   <tabstop>FileDirectoryText</tabstop>
   <tabstop>FileDirectoryButton</tabstop>
-  <tabstop>textEdit</tabstop>
-  <tabstop>pushButton_3</tabstop>
-  <tabstop>pushButton_4</tabstop>
-  <tabstop>pushButton</tabstop>
-  <tabstop>pushButton_2</tabstop>
+  <tabstop>openKdiff3Button</tabstop>
+  <tabstop>clearResultsButton</tabstop>
+  <tabstop>Kdfiff3CompareButton</tabstop>
+  <tabstop>Kdiff3MergeButton</tabstop>
+  <tabstop>Kdiff3OutputCheck</tabstop>
+  <tabstop>Kdiff3OutputLine</tabstop>
+  <tabstop>simianLaunchButton</tabstop>
+  <tabstop>simianSetupButton</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -273,7 +353,7 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
+   <sender>simianLaunchButton</sender>
    <signal>clicked()</signal>
    <receiver>SimianWindow</receiver>
    <slot>runSimian()</slot>
@@ -289,7 +369,7 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_2</sender>
+   <sender>simianSetupButton</sender>
    <signal>clicked()</signal>
    <receiver>SimianWindow</receiver>
    <slot>openSetup()</slot>
@@ -305,7 +385,7 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_3</sender>
+   <sender>openKdiff3Button</sender>
    <signal>clicked()</signal>
    <receiver>SimianWindow</receiver>
    <slot>runKdiff3()</slot>
@@ -317,22 +397,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>330</x>
      <y>349</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_4</sender>
-   <signal>clicked()</signal>
-   <receiver>ResultsTable</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>202</x>
-     <y>372</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>239</x>
-     <y>280</y>
     </hint>
    </hints>
   </connection>

@@ -67,7 +67,7 @@ Thumbs.db
 *.Debug
 *.Release
 
-# Python test file
+# Python test files
 *test.py
 
 # Python byte code

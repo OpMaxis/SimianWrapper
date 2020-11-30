@@ -26,178 +26,343 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 # from qtFunctions import browseDir, runKdiff3, openSetup, errorHandler
 import sys
+import os
+import subprocess
+import yaml
 
 
+class Ui_SimianWindow(QtCore.QObject):
 
-class Ui_SimianWindow(object):
-    def setupUi(self, SimianWindow):
-        SimianWindow.setObjectName("SimianWindow")
-        SimianWindow.resize(799, 357)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(SimianWindow.sizePolicy().hasHeightForWidth())
-        SimianWindow.setSizePolicy(sizePolicy)
-        SimianWindow.setMinimumSize(QtCore.QSize(0, 0))
-        SimianWindow.setBaseSize(QtCore.QSize(0, 0))
-        self.MainContents = QtWidgets.QWidget(SimianWindow)
-        self.MainContents.setObjectName("MainContents")
-        self.gridLayout = QtWidgets.QGridLayout(self.MainContents)
-        self.gridLayout.setObjectName("gridLayout")
-        self.ResultsGrid = QtWidgets.QGridLayout()
-        self.ResultsGrid.setObjectName("ResultsGrid")
-        self.pushButton_3 = QtWidgets.QPushButton(self.MainContents)
-        self.pushButton_3.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_3.sizePolicy().hasHeightForWidth())
-        self.pushButton_3.setSizePolicy(sizePolicy)
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.ResultsGrid.addWidget(self.pushButton_3, 1, 1, 1, 1)
-        self.ResultsTable = QtWidgets.QTreeWidget(self.MainContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ResultsTable.sizePolicy().hasHeightForWidth())
-        self.ResultsTable.setSizePolicy(sizePolicy)
-        self.ResultsTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.ResultsTable.setTabKeyNavigation(True)
-        self.ResultsTable.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self.ResultsTable.setColumnCount(1)
-        self.ResultsTable.setObjectName("ResultsTable")
-        self.ResultsTable.headerItem().setTextAlignment(0, QtCore.Qt.AlignCenter)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
-        self.ResultsTable.headerItem().setFont(0, font)
-        self.ResultsGrid.addWidget(self.ResultsTable, 0, 1, 1, 3)
-        self.pushButton_4 = QtWidgets.QPushButton(self.MainContents)
-        self.pushButton_4.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
-        self.pushButton_4.setSizePolicy(sizePolicy)
-        self.pushButton_4.setObjectName("pushButton_4")
-        self.ResultsGrid.addWidget(self.pushButton_4, 1, 2, 1, 2)
-        self.gridLayout.addLayout(self.ResultsGrid, 0, 0, 4, 1)
-        self.FileDirectoryContents = QtWidgets.QHBoxLayout()
-        self.FileDirectoryContents.setObjectName("FileDirectoryContents")
-        self.FileDirectoryName = QtWidgets.QLabel(self.MainContents)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setWeight(50)
-        self.FileDirectoryName.setFont(font)
-        self.FileDirectoryName.setObjectName("FileDirectoryName")
-        self.FileDirectoryContents.addWidget(self.FileDirectoryName)
-        self.FileDirectoryText = QtWidgets.QLineEdit(self.MainContents)
-        self.FileDirectoryText.setObjectName("FileDirectoryText")
-        self.FileDirectoryContents.addWidget(self.FileDirectoryText)
-        self.FileDirectoryButton = QtWidgets.QToolButton(self.MainContents)
-        self.FileDirectoryButton.setObjectName("FileDirectoryButton")
-        self.FileDirectoryContents.addWidget(self.FileDirectoryButton)
-        self.gridLayout.addLayout(self.FileDirectoryContents, 0, 1, 1, 1)
-        self.textEdit = QtWidgets.QTextEdit(self.MainContents)
-        self.textEdit.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.textEdit.sizePolicy().hasHeightForWidth())
-        self.textEdit.setSizePolicy(sizePolicy)
-        self.textEdit.setMouseTracking(False)
-        self.textEdit.setAcceptDrops(False)
-        self.textEdit.setObjectName("textEdit")
-        self.gridLayout.addWidget(self.textEdit, 2, 1, 1, 1)
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.pushButton = QtWidgets.QPushButton(self.MainContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
-        self.pushButton.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setPointSize(8)
-        self.pushButton.setFont(font)
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout_5.addWidget(self.pushButton)
-        self.pushButton_2 = QtWidgets.QPushButton(self.MainContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
-        self.pushButton_2.setSizePolicy(sizePolicy)
-        self.pushButton_2.setCheckable(False)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout_5.addWidget(self.pushButton_2)
-        self.gridLayout.addLayout(self.horizontalLayout_5, 3, 1, 1, 1)
-        SimianWindow.setCentralWidget(self.MainContents)
-        self.statusbar = QtWidgets.QStatusBar(SimianWindow)
-        self.statusbar.setObjectName("statusbar")
-        SimianWindow.setStatusBar(self.statusbar)
-        self.actionClear_Results = QtWidgets.QAction(SimianWindow)
-        self.actionClear_Results.setObjectName("actionClear_Results")
-        self.actionSave_Results = QtWidgets.QAction(SimianWindow)
-        self.actionSave_Results.setObjectName("actionSave_Results")
-        self.FileDirectoryName.setBuddy(self.FileDirectoryText)
+    @QtCore.pyqtSlot()
+    def browseDir(self):
+        dialog = QtCore.QFileDialog(self)
+        dialog.setFileMode(QtWidgets.QFileDialog.Directory)
+        # dialog.setFileMode(QtWidgets.QFileDialog.List)
+        dialog.Option.showDirsOnly()
+        if dialog.exec_():
+            dirName = dialog.selectedFiles()
+            dialog.setDirectory(dirName)
+            dialog.QLineEdit.setText(dirName)
+            # TODO: Unit Tests
+        pass
 
-        self.retranslateUi(SimianWindow)
-        self.FileDirectoryButton.clicked.connect(SimianWindow.browseDir)
-        self.pushButton.clicked.connect(SimianWindow.runSimian)
-        self.pushButton_2.clicked.connect(SimianWindow.openSetup)
-        self.pushButton_3.clicked.connect(SimianWindow.runKdiff3)
-        self.pushButton_4.clicked.connect(self.ResultsTable.clear)
-        QtCore.QMetaObject.connectSlotsByName(SimianWindow)
-        SimianWindow.setTabOrder(self.ResultsTable, self.FileDirectoryText)
-        SimianWindow.setTabOrder(self.FileDirectoryText, self.FileDirectoryButton)
-        SimianWindow.setTabOrder(self.FileDirectoryButton, self.textEdit)
-        SimianWindow.setTabOrder(self.textEdit, self.pushButton_3)
-        SimianWindow.setTabOrder(self.pushButton_3, self.pushButton_4)
-        SimianWindow.setTabOrder(self.pushButton_4, self.pushButton)
-        SimianWindow.setTabOrder(self.pushButton, self.pushButton_2)
+    # -This code opens the setupUi widget from the form.ui
+    @QtCore.pyqtSlot()
+    def openSetup(self, checked):
+        # Code here
+        if self.setupWindow is None:
+            self.setupWindow = Ui_SimianSetup.setupUi(self.setupWindow)
+            self.setupWindow = Ui_SimianSetup.retranslateUi(self.setupWindow)
+        self.setupWindow.show()
+        # NOTE pseudocode block:
+        # call setupUi SimianSetupWidget from ui_setup.py
+        # open the widget as a secondary window for SimianWrapper
+        # keep the window open until closed with app.exec_()
+        pass
 
-    def retranslateUi(self, SimianWindow):
-        _translate = QtCore.QCoreApplication.translate
-        SimianWindow.setWindowTitle(_translate("SimianWindow", "SimianWrapper"))
-        self.pushButton_3.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Open the selected files in Kdiff3 with the given settings in Setup.</p></body></html>"))
-        self.pushButton_3.setText(_translate("SimianWindow", "Open Selected in Kdiff3"))
-        self.ResultsTable.setSortingEnabled(True)
-        self.ResultsTable.headerItem().setText(0, _translate("SimianWindow", "Simian Duplicate Results"))
-        self.pushButton_4.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Clear the list of the results.</p></body></html>"))
-        self.pushButton_4.setText(_translate("SimianWindow", "Clear Results"))
-        self.FileDirectoryName.setText(_translate("SimianWindow", "File Directory"))
-        self.FileDirectoryButton.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Select the directory that you will be analyzing with Simian.</p></body></html>"))
-        self.FileDirectoryButton.setText(_translate("SimianWindow", "..."))
-        self.textEdit.setHtml(_translate("SimianWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; font-weight:600; color:#222222; background-color:#ffffff;\">SimianWrapper:</span><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\"> A GUI Wrapper for the Simian Similarity Analyzer, created by Simon Harris, featuring Kdiff3 integration to live-view files.</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">Copyright (C) 2020  Francisco Serrano</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\"><br /></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">This program is free software: you can redistribute it and/or modify</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</span></p>\n"
-"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\"><br /></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">This program is distributed in the hope that it will be useful,</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">but WITHOUT ANY WARRANTY; without even the implied warranty of</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:13px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">GNU General Public License for more details.</span></p></body></html>"))
-        self.pushButton.setToolTip(_translate("SimianWindow", "<html><head/><body><p><span style=\" font-family:\'Helvetica\'; font-size:12px; color:#000000; background-color:#f8f9fa;\">Launches the Simian program with the file directory listed in Setup to compare the files. </span></p><p><span style=\" font-family:\'Helvetica\'; font-size:12px; color:#000000; background-color:#f8f9fa;\">If files are listed, only the compared files will be listed in the Duplicate View.</span></p></body></html>"))
-        self.pushButton.setText(_translate("SimianWindow", "Launch with Simian"))
-        self.pushButton_2.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Opens the setup, which allows you to set the working file directory where your Simian and Kdiff3 installation is located, as well as command line options.</p></body></html>"))
-        self.pushButton_2.setText(_translate("SimianWindow", "Setup"))
-        self.actionClear_Results.setText(_translate("SimianWindow", "Clear Results"))
-        self.actionSave_Results.setText(_translate("SimianWindow", "Save Results"))
+    # -This code runs Kdiff3 directly by using the directory.
+    # If no directory is given, error message will be processed
+    # Otherwise.
+    @QtCore.pyqtSlot()
+    def runKdiff3(self):
+        # Code here
+        fileList = self.ResultsTable.selectedItems()
+        file1 = fileList[0]
+        file2 = fileList[1]
+        file3 = fileList[2]
+        with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFile:
+            newFileDict = yaml.load(yamlFile, Loader=yaml.FullLoader)
+            compareFile = newFileDict['kdiff3OptionsSaved'].get("outputFile")
+            kDiff3FileDir = newFileDict['fileDirsSaved'].get("kDiff3WorkFileDir")
+            if kDiff3FileDir or not bool(fileList):
+                qtFunctions.errorHandler(self, FileNotFoundError)
+            elif self.Kdiff3MergeButton.isChecked() \
+                    and fileList.len() == 3 and compareFile is not None:
+                process = subprocess.run([kDiff3FileDir, file1, file2,
+                                            file3, newFileName])
+            elif self.Kdiff3MergeButton.isChecked() \
+                    and fileList.len() == 3 and compareFile is None:
+                process = subprocess.run([kDiff3FileDir, file1, file2,
+                                            file3])
+            elif not self.Kdiff3MergeButton.isChecked():
+                process = subprocess.run([kDiff3FileDir, file1, file2])
+            else:
+                qtFunctions.errorHandler(self, RuntimeError)
+        pass
 
+    # -This code runs Simian by calling the CLI arguments and using
+    # simianFileDir for the directory that was is listed.
+    # If no directory is given, error message will be processed
+    # -The second effect will be producing the results by reading the CLI lines
+    # directly from prompt
+    @QtCore.pyqtSlot()
+    def runSimian(self):
+        # Initialize combinedArgs as an empty list, which will be populated
+        # later
+        combinedArgs = list()
+        self.openedFileDir = QtGui.QLineEdit()
+        # If there is no file directory to run simian on, end early with error
+        if self.openedFileDir is None:
+            qtFunctions.errorHandler(self, FileNotFoundError)
+        # otherwise, run through runSimian
+        else:
+            # yamlFile = open((os.path.join(os.pardir, 'settings.yaml')))
+            with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFile:
+                # safe_load_all calls a generator object which we iterate over
+                settingsFile = yaml.safe_load_all(yamlFile)
+                # This would call simianFileOptionsDefault, which we do not need
+                settingsFile.__next__()
+                # We save the second dictionary document
+                simianFileOptionsSaved = settingsFile.__next__()
+                # This is kdDiff3SavedSettings, which we do not need
+                settingsFile.__next__()
+                # we, however, need fileDirsSaved
+                fileDirsSaved = settingsFile.__next__()
+                # a for loop breaks the content because it will iterate over the other
+                # dictionaries, and a while loop would cause local encapsulaton which
+                # we do not want
 
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    SimianWindow = QtWidgets.QMainWindow()
-    ui = Ui_SimianWindow()
-    ui.setupUi(SimianWindow)
-    SimianWindow.show()
-    sys.exit(app.exec_())
+                # get the workfileDirectory of Simian by looking through
+                # the subdirectory fileDirsSaved
+                simianWorkFileDir = fileDirsSaved['fileDirsSaved'] \
+                    .get('SimianWorkFileDir')
+                # If the workfileDirectory has not been defined yet, end early
+                if simianWorkFileDir is None:
+                    qtFunctions.errorHandler(self, FileNotFoundError)
+                # Otherwise, continue onwards
+                else:
+                    # create a dictionary of simianFileOptionsSaved that only
+                    # grabs the subdirectory to save typing in the future
+                    simianNestedDict = simianFileOptionsSaved
+                    ['simianFileOptionsSaved']
+                    # For the key value pairs in the nested dictionary...
+                    for key, value in simianNestedDict.items():
+                        # if the value is truthy, update the value pair to be
+                        # + with space
+                        if value is True:
+                            updatedValue = simianNestedDict[key] = '+'
+                            combinedArgs.append('-' + key + updatedValue)
+                        # else, if the value is falsy, update the value pair to be
+                        # - with space
+                        elif value is False:
+                            updatedValue = simianNestedDict[key] = '-'
+                            combinedArgs.append('-' + key + updatedValue)
+                        # if the value is not a truthy or falsy value...
+                        # see threshold, which is an integer
+                        else:
+                            combinedArgs.append('-' + key + '=' + str(value))
+                            continue
+                    combinedArgs.insert(0, simianWorkFileDir)
+                    combinedArgs.append(self.openedFileDir)
+                    contentText = subprocess.check_output(combinedArgs, text=True, encoding="utf-8")
+
+    def main():
+        def setupUi(self, SimianWindow):
+            SimianWindow.setObjectName("SimianWindow")
+            SimianWindow.resize(780, 390)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(SimianWindow.sizePolicy().hasHeightForWidth())
+            SimianWindow.setSizePolicy(sizePolicy)
+            SimianWindow.setMinimumSize(QtCore.QSize(0, 0))
+            SimianWindow.setBaseSize(QtCore.QSize(0, 0))
+            self.MainContents = QtWidgets.QWidget(SimianWindow)
+            self.MainContents.setObjectName("MainContents")
+            self.gridLayout = QtWidgets.QGridLayout(self.MainContents)
+            self.gridLayout.setObjectName("gridLayout")
+            self.simianSetupButton = QtWidgets.QPushButton(self.MainContents)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.simianSetupButton.sizePolicy().hasHeightForWidth())
+            self.simianSetupButton.setSizePolicy(sizePolicy)
+            self.simianSetupButton.setCheckable(False)
+            self.simianSetupButton.setObjectName("simianSetupButton")
+            self.gridLayout.addWidget(self.simianSetupButton, 9, 7, 1, 1)
+            self.openKdiff3Button = QtWidgets.QPushButton(self.MainContents)
+            self.openKdiff3Button.setEnabled(True)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.openKdiff3Button.sizePolicy().hasHeightForWidth())
+            self.openKdiff3Button.setSizePolicy(sizePolicy)
+            self.openKdiff3Button.setObjectName("openKdiff3Button")
+            self.gridLayout.addWidget(self.openKdiff3Button, 9, 0, 1, 2)
+            self.Kdiff3OutFileName = QtWidgets.QLabel(self.MainContents)
+            self.Kdiff3OutFileName.setEnabled(False)
+            self.Kdiff3OutFileName.setObjectName("Kdiff3OutFileName")
+            self.gridLayout.addWidget(self.Kdiff3OutFileName, 6, 6, 1, 1)
+            self.SimianFileToKdiffLine = QtWidgets.QFrame(self.MainContents)
+            self.SimianFileToKdiffLine.setFrameShape(QtWidgets.QFrame.HLine)
+            self.SimianFileToKdiffLine.setFrameShadow(QtWidgets.QFrame.Sunken)
+            self.SimianFileToKdiffLine.setObjectName("SimianFileToKdiffLine")
+            self.gridLayout.addWidget(self.SimianFileToKdiffLine, 4, 3, 1, 8)
+            self.Kdiff3MergeButton = QtWidgets.QRadioButton(self.MainContents)
+            self.Kdiff3MergeButton.setObjectName("Kdiff3MergeButton")
+            self.gridLayout.addWidget(self.Kdiff3MergeButton, 5, 6, 1, 1)
+            self.Kdiff3FileOptionsLabel = QtWidgets.QLabel(self.MainContents)
+            font = QtGui.QFont()
+            font.setPointSize(12)
+            font.setBold(False)
+            font.setWeight(50)
+            self.Kdiff3FileOptionsLabel.setFont(font)
+            self.Kdiff3FileOptionsLabel.setLayoutDirection(QtCore.Qt.LeftToRight)
+            self.Kdiff3FileOptionsLabel.setAlignment(QtCore.Qt.AlignCenter)
+            self.Kdiff3FileOptionsLabel.setObjectName("Kdiff3FileOptionsLabel")
+            self.gridLayout.addWidget(self.Kdiff3FileOptionsLabel, 5, 3, 2, 2)
+            self.Kdiff3OutputCheck = QtWidgets.QCheckBox(self.MainContents)
+            self.Kdiff3OutputCheck.setEnabled(False)
+            self.Kdiff3OutputCheck.setObjectName("Kdiff3OutputCheck")
+            self.gridLayout.addWidget(self.Kdiff3OutputCheck, 6, 5, 1, 1)
+            self.Kdfiff3CompareButton = QtWidgets.QRadioButton(self.MainContents)
+            self.Kdfiff3CompareButton.setChecked(True)
+            self.Kdfiff3CompareButton.setObjectName("Kdfiff3CompareButton")
+            self.gridLayout.addWidget(self.Kdfiff3CompareButton, 5, 5, 1, 1)
+            self.clearResultsButton = QtWidgets.QPushButton(self.MainContents)
+            self.clearResultsButton.setEnabled(True)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.clearResultsButton.sizePolicy().hasHeightForWidth())
+            self.clearResultsButton.setSizePolicy(sizePolicy)
+            self.clearResultsButton.setObjectName("clearResultsButton")
+            self.gridLayout.addWidget(self.clearResultsButton, 9, 2, 1, 1)
+            self.simianLaunchButton = QtWidgets.QPushButton(self.MainContents)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.simianLaunchButton.sizePolicy().hasHeightForWidth())
+            self.simianLaunchButton.setSizePolicy(sizePolicy)
+            font = QtGui.QFont()
+            font.setPointSize(8)
+            self.simianLaunchButton.setFont(font)
+            self.simianLaunchButton.setObjectName("simianLaunchButton")
+            self.gridLayout.addWidget(self.simianLaunchButton, 9, 5, 1, 1)
+            self.SimianResultsLabel = QtWidgets.QLabel(self.MainContents)
+            font = QtGui.QFont()
+            font.setPointSize(12)
+            font.setBold(True)
+            font.setWeight(75)
+            self.SimianResultsLabel.setFont(font)
+            self.SimianResultsLabel.setAlignment(QtCore.Qt.AlignCenter)
+            self.SimianResultsLabel.setObjectName("SimianResultsLabel")
+            self.gridLayout.addWidget(self.SimianResultsLabel, 0, 0, 1, 3)
+            self.FileDirectoryName = QtWidgets.QLabel(self.MainContents)
+            font = QtGui.QFont()
+            font.setPointSize(10)
+            font.setBold(False)
+            font.setWeight(50)
+            self.FileDirectoryName.setFont(font)
+            self.FileDirectoryName.setObjectName("FileDirectoryName")
+            self.gridLayout.addWidget(self.FileDirectoryName, 0, 3, 1, 1)
+            self.FileDirectoryButton = QtWidgets.QToolButton(self.MainContents)
+            self.FileDirectoryButton.setObjectName("FileDirectoryButton")
+            self.gridLayout.addWidget(self.FileDirectoryButton, 0, 10, 1, 1)
+            self.FileDirectoryText = QtWidgets.QLineEdit(self.MainContents)
+            self.FileDirectoryText.setObjectName("FileDirectoryText")
+            self.gridLayout.addWidget(self.FileDirectoryText, 0, 4, 1, 6)
+            self.ResultsTable = QtWidgets.QListWidget(self.MainContents)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.ResultsTable.sizePolicy().hasHeightForWidth())
+            self.ResultsTable.setSizePolicy(sizePolicy)
+            self.ResultsTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+            self.ResultsTable.setTabKeyNavigation(True)
+            self.ResultsTable.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+            self.ResultsTable.setObjectName("ResultsTable")
+            self.gridLayout.addWidget(self.ResultsTable, 1, 0, 6, 3)
+            self.textEdit = QtWidgets.QTextEdit(self.MainContents)
+            self.textEdit.setEnabled(True)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.textEdit.sizePolicy().hasHeightForWidth())
+            self.textEdit.setSizePolicy(sizePolicy)
+            self.textEdit.setMouseTracking(False)
+            self.textEdit.setAcceptDrops(False)
+            self.textEdit.setObjectName("textEdit")
+            self.gridLayout.addWidget(self.textEdit, 1, 3, 3, 8)
+            self.Kdiff3OutputLine = QtWidgets.QLineEdit(self.MainContents)
+            self.Kdiff3OutputLine.setEnabled(False)
+            self.Kdiff3OutputLine.setMinimumSize(QtCore.QSize(100, 10))
+            self.Kdiff3OutputLine.setObjectName("Kdiff3OutputLine")
+            self.gridLayout.addWidget(self.Kdiff3OutputLine, 6, 7, 1, 4)
+            SimianWindow.setCentralWidget(self.MainContents)
+            self.statusbar = QtWidgets.QStatusBar(SimianWindow)
+            self.statusbar.setObjectName("statusbar")
+            SimianWindow.setStatusBar(self.statusbar)
+            self.actionClear_Results = QtWidgets.QAction(SimianWindow)
+            self.actionClear_Results.setObjectName("actionClear_Results")
+            self.actionSave_Results = QtWidgets.QAction(SimianWindow)
+            self.actionSave_Results.setObjectName("actionSave_Results")
+            self.Kdiff3OutFileName.setBuddy(self.Kdiff3OutputLine)
+            self.FileDirectoryName.setBuddy(self.FileDirectoryText)
+
+            self.retranslateUi(SimianWindow)
+            self.FileDirectoryButton.clicked.connect(SimianWindow.browseDir)
+            self.simianLaunchButton.clicked.connect(SimianWindow.runSimian)
+            self.simianSetupButton.clicked.connect(SimianWindow.openSetup)
+            self.openKdiff3Button.clicked.connect(SimianWindow.runKdiff3)
+            QtCore.QMetaObject.connectSlotsByName(SimianWindow)
+            SimianWindow.setTabOrder(self.ResultsTable, self.textEdit)
+            SimianWindow.setTabOrder(self.textEdit, self.FileDirectoryText)
+            SimianWindow.setTabOrder(self.FileDirectoryText, self.FileDirectoryButton)
+            SimianWindow.setTabOrder(self.FileDirectoryButton, self.openKdiff3Button)
+            SimianWindow.setTabOrder(self.openKdiff3Button, self.clearResultsButton)
+            SimianWindow.setTabOrder(self.clearResultsButton, self.Kdfiff3CompareButton)
+            SimianWindow.setTabOrder(self.Kdfiff3CompareButton, self.Kdiff3MergeButton)
+            SimianWindow.setTabOrder(self.Kdiff3MergeButton, self.Kdiff3OutputCheck)
+            SimianWindow.setTabOrder(self.Kdiff3OutputCheck, self.Kdiff3OutputLine)
+            SimianWindow.setTabOrder(self.Kdiff3OutputLine, self.simianLaunchButton)
+            SimianWindow.setTabOrder(self.simianLaunchButton, self.simianSetupButton)
+
+        def retranslateUi(self, SimianWindow):
+            _translate = QtCore.QCoreApplication.translate
+            SimianWindow.setWindowTitle(_translate("SimianWindow", "SimianWrapper"))
+            self.simianSetupButton.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Opens the setup, which allows you to set the working file directory where your Simian and Kdiff3 installation is located, as well as command line options.</p></body></html>"))
+            self.simianSetupButton.setText(_translate("SimianWindow", "Setup"))
+            self.openKdiff3Button.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Open the selected files in Kdiff3 with the given settings in Setup.</p></body></html>"))
+            self.openKdiff3Button.setText(_translate("SimianWindow", "Open Selected in Kdiff3"))
+            self.Kdiff3OutFileName.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Name of Output file generated by merge result.</p></body></html>"))
+            self.Kdiff3OutFileName.setText(_translate("SimianWindow", "Output File Name"))
+            self.Kdiff3MergeButton.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Merge the input.</p></body></html>"))
+            self.Kdiff3MergeButton.setText(_translate("SimianWindow", "Merge"))
+            self.Kdiff3FileOptionsLabel.setText(_translate("SimianWindow", "Kdiff3 File Options"))
+            self.Kdiff3OutputCheck.setToolTip(_translate("SimianWindow", "Output a merged file into a new file. (Not available in Compare.)"))
+            self.Kdiff3OutputCheck.setText(_translate("SimianWindow", "Output"))
+            self.Kdfiff3CompareButton.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Compares the results given in the base form.</p></body></html>"))
+            self.Kdfiff3CompareButton.setText(_translate("SimianWindow", "Compare"))
+            self.clearResultsButton.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Clear the list of the results.</p></body></html>"))
+            self.clearResultsButton.setText(_translate("SimianWindow", "Clear Results"))
+            self.simianLaunchButton.setToolTip(_translate("SimianWindow", "<html><head/><body><p><span style=\" font-family:\'Helvetica\'; font-size:12px; color:#000000; background-color:#f8f9fa;\">Launches the Simian program with the file directory listed in Setup to compare the files. </span></p><p><span style=\" font-family:\'Helvetica\'; font-size:12px; color:#000000; background-color:#f8f9fa;\">If files are listed, only the compared files will be listed in the Duplicate View.</span></p></body></html>"))
+            self.simianLaunchButton.setText(_translate("SimianWindow", "Launch with Simian"))
+            self.SimianResultsLabel.setText(_translate("SimianWindow", "Simian Results Table"))
+            self.FileDirectoryName.setText(_translate("SimianWindow", "File Directory"))
+            self.FileDirectoryButton.setToolTip(_translate("SimianWindow", "<html><head/><body><p>Select the directory that you will be analyzing with Simian.</p></body></html>"))
+            self.FileDirectoryButton.setText(_translate("SimianWindow", "..."))
+            self.textEdit.setHtml(_translate("SimianWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+    "p, li { white-space: pre-wrap; }\n"
+    "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+    "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; font-weight:600; color:#222222; background-color:#ffffff;\">SimianWrapper:</span><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\"> A GUI Wrapper for the Simian Similarity Analyzer, created by Simon Harris, featuring Kdiff3 integration to live-view files.</span></p>\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">Copyright (C) 2020  Francisco Serrano</span></p>\n"
+    "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\"><br /></p>\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">This program is free software: you can redistribute it and/or modify</span></p>\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</span></p>\n"
+    "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\"><br /></p>\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">This program is distributed in the hope that it will be useful,</span></p>\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">but WITHOUT ANY WARRANTY; without even the implied warranty of</span></p>\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></p>\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:13px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#ffffff;\"><span style=\" font-family:\'Courier New\'; font-size:8pt; color:#222222; background-color:#ffffff;\">GNU General Public License for more details.</span></p></body></html>"))
+            self.actionClear_Results.setText(_translate("SimianWindow", "Clear Results"))
+            self.actionSave_Results.setText(_translate("SimianWindow", "Save Results"))
+
+        app = QtWidgets.QApplication(sys.argv)
+        SimianWindow = QtWidgets.QMainWindow()
+        ui = Ui_SimianWindow()
+        ui.setupUi(SimianWindow)
+        SimianWindow.show()
+        sys.exit(app.exec_())

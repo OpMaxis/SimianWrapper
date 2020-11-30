@@ -19,32 +19,38 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from ui_error import Ui_ErrorDialog
 from ui_form import Ui_SimianWindow
 from ui_setup import Ui_SimianSetup
-import sys
 import os
 import yaml
-import getopt
 import subprocess
 
 
 # qtFunctions carries out the custom slots defined in the ui python files
 class qtFunctions(QtCore.QObject):
 
-    # Define a custom signal that carries the string of the file name
-    opened = QtCore.pyqtSignal(str, name='fileDir')
-
     # This code is the general use for all times a file directory will be
     # accessed
     @QtCore.pyqtSlot()
     def browseDir(self):
+        # calls the dialog box to open
         dialog = QtCore.QFileDialog(self)
+
+        # sets the dialog file open option to Directory, only allowing
+        # directory selects
         dialog.setFileMode(QtWidgets.QFileDialog.Directory)
+
         # dialog.setFileMode(QtWidgets.QFileDialog.List)
+        # set the dialog to only show directories, not files
         dialog.Option.showDirsOnly()
+        # if the dialog is running...
         if dialog.exec_():
-            dirName = dialog.selectedFiles()
+            # set the directory name to the currently selected file
+            dirName = dialog.selectFile(dialog.fileSelected())
+
+            # set the directory to that directory name
             dialog.setDirectory(dirName)
             dialog.QLineEdit.setText(dirName)
-            # TODO: Unit Tests
+            # TODO: Unit Tests: additionally, make sure the
+            # line change reflects to the QLineEdit.text
         pass
 
     # -This code opens the setupUi widget from the form.ui
@@ -66,30 +72,82 @@ class qtFunctions(QtCore.QObject):
     # Otherwise.
     @QtCore.pyqtSlot()
     def runKdiff3(self):
-        # Code here
+
+        # create a file list from the selected items on the resultsTable
         fileList = self.ResultsTable.selectedItems()
         file1 = fileList[0]
         file2 = fileList[1]
         file3 = fileList[2]
         with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFile:
-            newFileName = yaml.load(yamlFile, Loader=yaml.FullLoader)
-            compareFile = newFileName.get("outputFile")
-            kDiff3FileDir = newFileName.get("kDiff3WorkFileDir")
-            if kDiff3FileDir or file1 or file2 is None:
+            # This would call simianFileOptionsDefault, which we do not need
+            yamlFile.__next__()
+
+            # This would call simianFileOptionsSaved, which we do not need
+            yamlFile.__next__()
+
+            # we, however, need fileDirsSaved
+            fileDirsSaved = yamlFile.__next__()
+
+            # compareFile is the QLineEdit text from the kDiff3 File Options
+            outputFile = self.QtGui.QLineEdit.text()
+
+            # kDiff3FileDir is called from the yamlFile in the nested dictionary
+            kDiff3FileDir = fileDirsSaved['fileDirsSaved']\
+                .get("kDiff3WorkFileDir")
+
+            # ifKdiff3FileDir is not set, or there are no selected items
+            # in the list...
+            if kDiff3FileDir is None or not bool(fileList):
+
+                # Call the error handler
                 qtFunctions.errorHandler(self, FileNotFoundError)
-            elif Ui_SimianSetup.Kdiff3MergeButton.isChecked() and compareFile \
-                    is not None:
-                process = subprocess.Popen(str[kDiff3FileDir, file1, file2,
-                                            file3, newFileName])
-            elif Ui_SimianSetup.Kdiff3MergeButton.isChecked() \
-                    and compareFile is None:
-                process = subprocess.Popen(str[kDiff3FileDir, file1, file2,
-                                            file3])
-            elif not Ui_SimianSetup.Kdiff3MergeButton.isChecked():
-                process = subprocess.Popen(str[kDiff3FileDir, file1, file2])
+
+            # if there were less than 2 items selected, or more than 3 items..
+            if fileList.len() > 2 or fileList.len() < 3:
+
+                # call ErrorHandler with an UnboundLocalError()
+                qtFunctions.errorHandler(self, UnboundLocalError)
+
+            # if the selected item list is composed of 2 items...
+            if fileList.len() == 2:
+
+                # if the merge button is checked...
+                if self.Kdiff3MergeButton.isChecked():
+
+                    # if there is no supplied output file, assume a merger
+                    if outputFile is None:
+                        subprocess.run([kDiff3FileDir, file1, file2, '-m'])
+
+                    # else, run kDiff3 with the output file being generated
+                    else:
+                        subprocess.run([kDiff3FileDir, file1, file2, '-o', outputFile])
+
+                # if the merge button is not checked, just do a compare operation
+                else:
+                    subprocess.run([kDiff3FileDir, file1, file2])
+
+            # else, if the file list length is 3...
+            elif fileList.len() == 3:
+
+                # check if the merge button is checked...
+                if self.Kdiff3MergeButton.isChecked():
+
+                    # if there is no outputFile, assume a merger...
+                    if outputFile is None:
+                        subprocess.run([kDiff3FileDir, file1, file2, file3, '-m'])
+
+                    # else, run kDiff3 with the output file being generated
+                    else:
+                        subprocess.run([kDiff3FileDir, file1, file2, file3, '-o', outputFile])
+
+                # if there is no merge button checked, just run a compare
+                else:
+                    subprocess.run([kDiff3FileDir, file1, file2, file3])
+
+            # else, if an unknown error occurs...
             else:
+                # declare RuntimeError()
                 qtFunctions.errorHandler(self, RuntimeError)
-        pass
 
     # -This code runs Simian by calling the CLI arguments and using
     # simianFileDir for the directory that was is listed.
@@ -98,16 +156,15 @@ class qtFunctions(QtCore.QObject):
     # directly from prompt
     @QtCore.pyqtSlot()
     def runSimian(self):
-        # Initialize combined string as an empty string, which will be populated
+        # Initialize combinedArgs as an empty list, which will be populated
         # later
-        combinedString = ""
-        self.openedFileDir = QtGui.QLineEdit()
+        combinedArgs = list()
+        openedFileDir = self.FileDirectoryText.ext()
         # If there is no file directory to run simian on, end early with error
         if self.openedFileDir is None:
             qtFunctions.errorHandler(self, FileNotFoundError)
         # otherwise, run through runSimian
         else:
-            # yamlFile = open((os.path.join(os.pardir, 'settings.yaml')))
             with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFile:
                 # safe_load_all calls a generator object which we iterate over
                 settingsFile = yaml.safe_load_all(yamlFile)
@@ -115,8 +172,6 @@ class qtFunctions(QtCore.QObject):
                 settingsFile.__next__()
                 # We save the second dictionary document
                 simianFileOptionsSaved = settingsFile.__next__()
-                # This is kdDiff3SavedSettings, which we do not need
-                settingsFile.__next__()
                 # we, however, need fileDirsSaved
                 fileDirsSaved = settingsFile.__next__()
                 # a for loop breaks the content because it will iterate over the other
@@ -142,43 +197,139 @@ class qtFunctions(QtCore.QObject):
                         # + with space
                         if value is True:
                             updatedValue = simianNestedDict[key] = '+'
-                            combinedString += '-' + key + updatedValue
+                            combinedArgs.append('-' + key + updatedValue)
                         # else, if the value is falsy, update the value pair to be
                         # - with space
                         elif value is False:
                             updatedValue = simianNestedDict[key] = '-'
-                            combinedString += '-' + key + updatedValue + ' '
+                            combinedArgs.append('-' + key + updatedValue)
                         # if the value is not a truthy or falsy value...
                         # see threshold, which is an integer
                         else:
-                            combinedString += '-' + key + '=' + str(value) + ' '
+                            # append the threshold separately, changing the int
+                            # to a string value for compatability
+                            combinedArgs.append('-' + key + '=' + str(value))
                             continue
-                    executedArgs = subprocess.Popen
-                    (str[simianWorkFileDir, combinedString, self.openedFileDir])
-                # TODO: if-else loop which checks for valid data
-                # in savedDataArray
-                # if there is saved settings, use those options from the array
-                # else, use defaults
+                        # insert the simianWorkFileDir, which will be the
+                        # executing process where simian.exe will be located
+                        combinedArgs.insert(0, simianWorkFileDir)
+                        # put the openedFileDir
+                        combinedArgs.append(openedFileDir)
+                        contentText = \
+                            subprocess.check_output(combinedArgs, text=True, encoding="utf-8")
+                        stringWithoutSimian = contentText.split("\n", 4)[4]
+                        stringWithoutOutput = stringWithoutSimian.split('\n')[:-4]
+                        listOfResults = stringWithoutOutput.splitlines()
+                        foundResults = []
+                        i = 0
+                        if 'Found 0 duplicate lines in 0 blocks in 0 files' \
+                                in stringWithoutSimian:
+                            # end early
+                            foundNumber = 0
+                            foundResults.insert(i, '{foundNumber} Results')
+                            self.listWidget.addItems(foundResults)
+                            # present a column with zero results in the simian Table
+                            # pass
+                        else:
+                            while i < len(listOfResults):
+                                lineString = listOfResults.pop(i)
+                                i += 1
+                                if 'Found' in lineString and \
+                                        'following files:' in lineString:
+                                    foundNumber = int(lineString.split(' ')[1])
+                                    # fingerprint = lineString.split(' ')[6]
+                                    foundResults.insert(i, foundNumber)
+                                    # TODO: implement PyQt5 GUI
+                                elif 'Between lines' in lineString:
+                                    foundFileName = parsePath(lineString)
+                                    foundResults['{i}'].insert(
+                                        {i, foundFileName})
+                                    # TODO: PyQt5 Implementation into GUI
+                                else:
+                                    qtFunctions.errorHandler(self, RuntimeError)
+                                print(foundResults)
+                                print(foundNumber)
+                            foundResults.sort(reverse=True, key=sortList(foundNumber))
+                            self.listWidget.addItems(foundResults)
+                        # print(listOfResults)
 
-            # args = str(sys.argv)
-            # nums = len(sys.argv)
-            # yamlFile.close()
+
+# helper method for runSimian to find the path
+def parsePath(string):
+    # initialize count to 0
+    count = 0
+    # while we haven't found a string that resembles a path...
+    while True:
+        # increase the count
+        count += 1
+        # split each string from the start to the end, from the first string
+        newString = string.split(string[:count], 1)
+        # if a path is deemed to exist from this file...
+        if os.path.exists(newString[1]):
+            # get the new string
+            return newString
+            # break from the loop to terminate the otherwise infinite result
+            break
+
+
+# sorter for the foundResults list in runSimian
+def sortList(sorter):
+    return sorter['foundNumber']
 
     # - This code functions to save the settings to file
     @QtCore.pyqtSlot()
     def saveSettings(self):
         with open((os.path.join(os.pardir, 'settings.yaml'))) as yamlFileSaved:
-            settingsFile = yaml.load(yamlFileSaved, Loader=yaml.FullLoader)
             # safe_load_all calls a generator object which we iterate over
-            settingsFile = yaml.safe_load_all(yamlFile)
+            settingsFile = yaml.safe_load_all(yamlFileSaved)
+
             # We need to reference default file options for saveSettings
             simianFileOptionsDefault = settingsFile.__next__()
+
             # We save the second dictionary document for the saved settings
             simianFileOptionsSaved = settingsFile.__next__()
-            # This is kdDiff3SavedSettings, which we do not need
-            settingsFile.__next__()
-            # we, however, need fileDirsSaved
+
+            # we save fileDirsSaved to save these results to file
             fileDirsSaved = settingsFile.__next__()
+
+            # for each QCheckBox located in the main window...
+            for checkstate in self.findChildren(QtWidgets.QCheckBox):
+                # set the value of True or False based on the checkbox
+                newValue = checkstate.isChecked()
+
+                # get a tuple to form an iterator through each
+                # simianFileOptionsSaved dictionary key:value pair
+                simianTuples = simianFileOptionsSaved['simianFileOptionsSaved']\
+                    .items()
+
+                # unpack the tuple object; we are interested in simianKey,
+                # and thus have no use for the original value, only unpacking
+                # it to avoid errors
+                (simianKey, originalValue) = simianTuples
+
+                # Update the simianFileOptionsSaved with the new checked state
+                simianFileOptionsSaved['simianFileOptionsSaved']\
+                    .update(simianKey, newValue)
+
+            # since threshold is the only non-checkbox value, we can check it
+            # independently and do not need to unpack the key:value pair here
+            # as a tuple
+            newThresholdValue = self.QtWidgets.QSpinBox.value()
+
+            # update the threshold with the new threshold value from the
+            # QSpinBox
+            simianFileOptionsSaved['simianFileOptionsSaved']\
+                .update('threshold', newThresholdValue)
+            # Update the fileDirsSaved from simianWorkFileDir
+            # from simianFileDirLine's text box
+            fileDirsSaved['fileDirsSaved']\
+                .update('simianWorkFileDir', self.simianFileDirLine.text())
+            # Update the fileDirsSaved from kDiff3WorkFileDir
+            # from kDiff3FileDirLine's text box
+            fileDirsSaved['fileDirsSaved']\
+                .update('kDiff3WorkFileDir', self.kDiff3FileDirLine.text())
+
+            yaml.safe_dump(simianFileOptionsSaved, stream=yamlFileSaved)
         # NOTE pseudocode block
         # with open yamlFile:
         #   call dictionary for simianFileOptionsSaved
@@ -200,17 +351,36 @@ class qtFunctions(QtCore.QObject):
             simianFileOptionsDefault = settingsFile.__next__()
             # We save the second dictionary document for the saved settings
             simianFileOptionsSaved = settingsFile.__next__()
-            # This is kdDiff3SavedSettings, which we do not need
-            settingsFile.__next__()
             # we do not need to update fileDirsSaved, only
             # simianFileOptionsSaved
             settingsFile.__next__()
-            simianFileOptionsSaved.update(simianFileOptionsDefault)
-            # TODO: reset the boolean checked states and values according to
-            # the saved values in simianFileOptionsSaved or
-            # simianFileOptionsDefault, whichever turns out to be easier
-            yaml.safe_dump(simianFileOptionsSaved, stream=yamlFileSaved)
-        print("Default settings reset")
+            # for each QCheckBox located in the main window...
+            for checkstate in self.findChildren(QtWidgets.QCheckBox):
+                # get a tuple to form an iterator through each
+                # simianFileOptionsDefault dictionary key:value pair
+                simianTuples = simianFileOptionsDefault['simianFileOptionsDefault']\
+                    .items()
+
+                # unpack the tuple object; we are interested in simianKey,
+                # and thus have no use for the original value, only unpacking
+                # it to avoid errors
+                (simianKey, originalValue) = simianTuples
+                # set the value of True or False based on the checkbox
+                newValue = checkstate.setChecked(originalValue)
+
+            # since threshold is the only non-checkbox value, we can check it
+            # independently and do not need to unpack the key:value pair here
+            # as a tuple
+            defaultThresholdValue = self.QtWidgets.QSpinBox\
+                .setValue(simianFileOptionsDefault['simianFileOptionsDefault']
+                            .get('threshold'))
+
+        simianFileOptionsSaved['simianFileOptionsSaved']\
+            .update(simianFileOptionsDefault)['simianFileOptionsDefault']
+        # TODO: reset the boolean checked states and values according to
+        # the saved values in simianFileOptionsSaved or
+        # simianFileOptionsDefault, whichever turns out to be easier
+        yaml.safe_dump(simianFileOptionsSaved, stream=yamlFileSaved)
 
     # - This code is called for whenever an error is called by any means
     @QtCore.pyqtSlot()
@@ -223,6 +393,10 @@ class qtFunctions(QtCore.QObject):
             if ErrorEvent is FileNotFoundError:
                 self.errorWidget.ErrorText.setText(_translate("ErrorDialog",
                     "Invalid directories. Please check your saved directories. "))
+            if ErrorEvent is UnboundLocalError:
+                self.errorWidget.ErrorText.setText(_translate("ErrorDialog",
+                    "You either selected less than 2 files or more than 3 files. \
+                        Please check your selected files in the Simian Table. "))
             else:
                 self.ErrorText.setText(_translate("ErrorDialog", "An error has occurred. "))
             self.errorWidget.show()

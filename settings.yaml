@@ -1,46 +1,43 @@
 # These settings will be loaded if no other settings are saved.
 ---
 simianFileOptionsDefault:
-  failOnDuplication: True
-  ignoreCurlyBraces: False
-  ignoreIdentifiers: False
-  ignoreIdentiferCase: True
-  ignoreLiterals: False
-  ignoreNumbers: False
-  ignoreCharacters: False
-  ignoreCharacterCase: True
-  ignoreStrings: False
-  ignoreStringCase: True
-  ignoreSubtypeNames: False
-  ignoreModifiers: True
-  ignoreVariableNames: False
   balanceParentheses: False
   balanceSquareBrackets: False
+  failOnDuplication: True
+  ignoreCharacterCase: True
+  ignoreCharacters: False
+  ignoreCurlyBraces: False
+  ignoreIdentifierCase: True
+  ignoreIdentifiers: False
+  ignoreLiterals: False
+  ignoreModifiers: True
+  ignoreNumbers: False
+  ignoreStringCase: True
+  ignoreStrings: False
+  ignoreSubtypeNames: False
+  ignoreVariableNames: False
   threshold: 2
 ---
 # These settings will be loaded when the user saves settings and used
 # until the user chooses to reset to defaults.
 simianFileOptionsSaved:
-  failOnDuplication: True
-  ignoreCurlyBraces: False
-  ignoreIdentifiers: False
-  ignoreIdentiferCase: True
-  ignoreLiterals: False
-  ignoreNumbers: False
-  ignoreCharacters: False
-  ignoreCharacterCase: True
-  ignoreStrings: False
-  ignoreStringCase: True
-  ignoreSubtypeNames: False
-  ignoreModifiers: True
-  ignoreVariableNames: False
   balanceParentheses: False
   balanceSquareBrackets: False
+  failOnDuplication: True
+  ignoreCharacterCase: True
+  ignoreCharacters: False
+  ignoreCurlyBraces: False
+  ignoreIdentifierCase: True
+  ignoreIdentifiers: False
+  ignoreLiterals: False
+  ignoreModifiers: True
+  ignoreNumbers: False
+  ignoreStringCase: True
+  ignoreStrings: False
+  ignoreSubtypeNames: False
+  ignoreVariableNames: False
   threshold: 2
 ---
-kdiff3OptionsSaved:
-  outputFile:
----
 fileDirsSaved:
-  SimianWorkFileDir:
+  simianWorkFileDir:
   kDiff3WorkFileDir:

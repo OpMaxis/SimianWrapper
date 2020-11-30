@@ -28,32 +28,31 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 
 
-class Ui_ErrorDialog(object):
-    def setupUi(self, ErrorDialog):
-        ErrorDialog.setObjectName("ErrorDialog")
-        ErrorDialog.resize(260, 100)
-        self.ErrorText = QtWidgets.QLabel(ErrorDialog)
-        self.ErrorText.setGeometry(QtCore.QRect(0, 0, 260, 50))
-        self.ErrorText.setAlignment(QtCore.Qt.AlignCenter)
-        self.ErrorText.setObjectName("ErrorText")
-        self.buttonBox = QtWidgets.QDialogButtonBox(ErrorDialog)
-        self.buttonBox.setGeometry(QtCore.QRect(10, 70, 156, 23))
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
+class Ui_ErrorDialog(QtCore.QObject):
+    def main():
+        def setupUi(self, ErrorDialog):
+            ErrorDialog.setObjectName("ErrorDialog")
+            ErrorDialog.resize(260, 100)
+            self.ErrorText = QtWidgets.QLabel(ErrorDialog)
+            self.ErrorText.setGeometry(QtCore.QRect(0, 0, 260, 50))
+            self.ErrorText.setAlignment(QtCore.Qt.AlignCenter)
+            self.ErrorText.setObjectName("ErrorText")
+            self.buttonBox = QtWidgets.QDialogButtonBox(ErrorDialog)
+            self.buttonBox.setGeometry(QtCore.QRect(10, 70, 156, 23))
+            self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Ok)
+            self.buttonBox.setObjectName("buttonBox")
 
-        self.retranslateUi(ErrorDialog)
-        QtCore.QMetaObject.connectSlotsByName(ErrorDialog)
+            self.retranslateUi(ErrorDialog)
+            QtCore.QMetaObject.connectSlotsByName(ErrorDialog)
 
-    def retranslateUi(self, ErrorDialog):
-        _translate = QtCore.QCoreApplication.translate
-        ErrorDialog.setWindowTitle(_translate("ErrorDialog", "Dialog"))
-        self.ErrorText.setText(_translate("ErrorDialog", "An error has occurred. "))
+        def retranslateUi(self, ErrorDialog):
+            _translate = QtCore.QCoreApplication.translate
+            ErrorDialog.setWindowTitle(_translate("ErrorDialog", "Dialog"))
+            self.ErrorText.setText(_translate("ErrorDialog", "An error has occurred. "))
 
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    ErrorDialog = QtWidgets.QDialog()
-    ui = Ui_ErrorDialog()
-    ui.setupUi(ErrorDialog)
-    ErrorDialog.show()
-    sys.exit(app.exec_())
+        app = QtWidgets.QApplication(sys.argv)
+        ErrorDialog = QtWidgets.QDialog()
+        ui = Ui_ErrorDialog()
+        ui.setupUi(ErrorDialog)
+        ErrorDialog.show()
+        sys.exit(app.exec_())
