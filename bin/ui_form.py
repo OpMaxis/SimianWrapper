@@ -17,7 +17,7 @@
 #################
 
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, QStandardPaths
 from ui_setup import Ui_SimianSetup
 from ui_error import Ui_ErrorDialog
 import sys
@@ -36,7 +36,7 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
         self.dialog = None
 
         # set the dirpath which will be used by the file saving and restoring
-        self.dirPath = ("../settings.ini")
+        self.dirPath = resource_path(("settings.ini"))
 
         # UI initialization; dynamic and based off of the correspoinding .ui
         # file, meaning changing the GUI in Qt Designer will result in an
@@ -71,6 +71,8 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
         # call the FileDirectoryText to be used by browseDir
         self.FileDirectoryText = \
             self.findChild(QtWidgets.QLineEdit, 'FileDirectoryText')
+        # connects a text change event to the method to enforce suffixes
+        self.FileDirectoryText.textChanged.connect(self.enforceLineEditSuffix)
 
         # call the Kdiff3OutputLine to be used by runKdiff3
         self.Kdiff3OutputLine = \
@@ -103,12 +105,21 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
         listOfResults = self.ResultsTable.selectedItems()
         newList = []
 
+        # for the number of results on the selected items, append it to the end of the list
         for x in listOfResults:
             newList.append(x)
 
         file1 = newList[0]
         file2 = newList[1]
-        file3 = newList[2]
+
+        newFile1 = file1.text()
+        newFile2 = file2.text()
+        # if the list of results is less than 3, set file3 to none
+        if len(listOfResults) < 3:
+            file3 = None
+        else:
+            file3 = newList[2]
+            newFile3 = file3.text()
 
         # call a read_config object to read from file
         read_config = configparser.ConfigParser()
@@ -142,7 +153,7 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
                 .setText("You must select items in the table.")
             self.Ui_ErrorDialog.show()
         # if there were less than 2 items selected, or more than 3 items..
-        elif newList.len() > 2 or newList.len() < 3:
+        elif len(newList) > 2 or len(newList) < 3:
             # raise UnboundLocalError("You must select 2 or 3 items to compare or merge.")
             if self.Ui_ErrorDialog is None:
                 self.Ui_ErrorDialog = Ui_ErrorDialog()
@@ -154,44 +165,44 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
             pass
         else:
             # if the selected item list is composed of 2 items...
-            if newList.len() == 2:
+            if len(newList) == 2:
 
                 # if the merge button is checked...
                 if self.Kdiff3MergeButton.isChecked():
 
                     # if there is no supplied output file, assume a merger
                     if outputFile is None:
-                        subprocess.run([kDiff3FileDir, file1, file2, '-m'])
+                        subprocess.run([kDiff3FileDir, newFile1, newFile2, '-m'])
 
                     # else, run kDiff3 with the output file being generated
                     else:
-                        subprocess.run([kDiff3FileDir, file1, file2, '-o',
+                        subprocess.run([kDiff3FileDir, newFile1, newFile2, '-o',
                                         outputFile])
 
                 # if the merge button is not checked,
                 # just do a compare operation
                 else:
-                    subprocess.run([kDiff3FileDir, file1, file2])
+                    subprocess.run([kDiff3FileDir, newFile1, newFile2])
 
             # else, if the file list length is 3...
-            elif newList.len() == 3:
+            elif len(newList) == 3:
 
                 # check if the merge button is checked...
                 if self.Kdiff3MergeButton.isChecked():
 
                     # if there is no outputFile, assume a merger...
                     if outputFile is None:
-                        subprocess.run([kDiff3FileDir, file1, file2, file3,
+                        subprocess.run([kDiff3FileDir, newFile1, newFile2, newFile3,
                                         '-m'])
 
                     # else, run kDiff3 with the output file being generated
                     else:
-                        subprocess.run([kDiff3FileDir, file1, file2, file3,
+                        subprocess.run([kDiff3FileDir, newFile1, newFile2, newFile3,
                                         '-o', outputFile])
 
                 # if there is no merge button checked, just run a compare
                 else:
-                    subprocess.run([kDiff3FileDir, file1, file2, file3])
+                    subprocess.run([kDiff3FileDir, newFile1, newFile2, newFile3])
 
             # else, if an unknown error occurs...
             else:
@@ -202,6 +213,24 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
                     .setText("An unknown error has occurred.")
                 self.Ui_ErrorDialog.show()
                 # errorHandler(self, RuntimeError)
+
+    # This method forces the postfix of /* onto the file to satisfy the
+    # demands of subprocess's arguments
+    @pyqtSlot()
+    def enforceLineEditSuffix(self):
+        # get the current text
+        text = self.FileDirectoryText.text()
+
+        # if that text doesn't end with the asterisks
+        if not text.endswith('/*'):
+
+            # block other signals from accessing FileDirectoryText
+            self.FileDirectoryText.blockSignals(True)
+            # modify the text to have the original text, plus the asterisks
+            self.FileDirectoryText.setText(text +'/*')
+
+            # allow it to be edited by other signals again
+            self.FileDirectoryText.blockSignals(False)
 
     # -This code runs Simian by calling the CLI arguments and using
     # simianFileDir for the directory that was is listed.
@@ -214,72 +243,52 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
         # later
         combinedArgs = list()
 
-        # openedFileDir corresponds to the main window's FileDirectoryText
-        # QLineEdit
-        # openedFileDir = self.FileDirectoryText.text()
-        # If there is no file directory to run simian on, end early with error
-        if os.path.exists(self.FileDirectoryText.text()) is False:
-            # raise OSError("Please enter a valid directory.")
+        # call a read_config object to read from file
+        read_config = configparser.ConfigParser()
+        # read according to the assigned dirPath
+        read_config.read(self.dirPath)
+
+        # simianWorkFileDir is called read_config with the option corresponding
+        # to the result
+        simianWorkFileDir = read_config.get("fileDirsSaved", "simianWorkFileDir")
+
+        # If the workfileDirectory has not been defined yet, end early
+        if simianWorkFileDir is None:
+            # raise FileNotFoundError('Your directory for Simian is invalid. Please check your setup options.')
             if self.Ui_ErrorDialog is None:
                 self.Ui_ErrorDialog = Ui_ErrorDialog()
             self.Ui_ErrorDialog.ErrorText\
-                .setText("Please enter a valid directory.")
+                .setText('Your directory for Simian is invalid. Please check your setup options.')
             self.Ui_ErrorDialog.show()
-            # globalFunctions.errorHandler(self, FileNotFoundError)
-        # otherwise, run through runSimian
+        # Otherwise, continue onwards
         else:
-            # call a read_config object to read from file
-            read_config = configparser.ConfigParser()
-            # read according to the assigned dirPath
-            read_config.read(self.dirPath)
 
-            # simianWorkFileDir is called read_config with the option corresponding
-            # to the result
-            simianWorkFileDir = read_config.get("fileDirsSaved", "simianWorkFileDir")
+            # insert the simianWorkFileDir, which will be the
+            # executing process where simian.exe will be located
+            combinedArgs.insert(0, simianWorkFileDir)
+            # put the openedFileDir at the end of the argument list
+            combinedArgs.append('-failOnDuplication-')
+            combinedArgs.append(self.FileDirectoryText.text())
 
-            # If the workfileDirectory has not been defined yet, end early
-            if simianWorkFileDir is None:
-                # raise FileNotFoundError('Your directory for Simian is invalid. Please check your setup options.')
-                if self.Ui_ErrorDialog is None:
-                    self.Ui_ErrorDialog = Ui_ErrorDialog()
-                self.Ui_ErrorDialog.ErrorText\
-                    .setText('Your directory for Simian is invalid. Please check your setup options.')
-                self.Ui_ErrorDialog.show()
-            # Otherwise, continue onwards
-            else:
-
-                # insert the simianWorkFileDir, which will be the
-                # executing process where simian.exe will be located
-                combinedArgs.insert(0, simianWorkFileDir)
-                # put the openedFileDir at the end of the argument list
-                combinedArgs.append(self.FileDirectoryText.text())
-
-                # contentText stores the output gathered from
-                # Simian.exe with combinedArgs, with the additional
-                # parameters setting the file to save as a string
-                # with utf-8 encoding
+            # contentText stores the output gathered from
+            # Simian.exe with combinedArgs, with the additional
+            # parameters setting the file to save as a string
+            # with utf-8 encoding
+            try:
                 contentText = \
-                    subprocess.check_output(combinedArgs, text=True, encoding="utf-8")
-                # Remove the copyright from Simian's output
-                stringWithoutSimian = contentText.split("\n", 4)[4]
+                    subprocess.check_output(combinedArgs, text=True, encoding="utf-8", stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+            else:
+                # Split the text into multiple lines of
+                stringList = contentText.split("\n")
 
-                # remove the ending output, leaving only valid results
-                stringWithoutOutput = stringWithoutSimian.split('\n')[:-4]
-
-                # split the stringWithoutOutput into a
-                # list of string objects
-                listOfResults = (line.split('\n') for line in stringWithoutOutput)
-
-
-                # initialize a counter for the list in order to organize
-                # results
-                i = 0
 
                 # if there are no results for duplicates from Simian...
                 # NOTE: This outcome also occurs if the openedFileDir is
                 # invalid. This behavior is native to Simian's processing.
                 if 'Found 0 duplicate lines in 0 blocks in 0 files' \
-                        in stringWithoutSimian:
+                        in stringList:
                     # make an empty List out of foundResults
                     # that will be populated
                     foundResults = []
@@ -302,13 +311,18 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
                     # make an empty List out of foundResults
                     # that will be populated
                     foundResults = []
+                    foundNumber = int()
+                    # initialize a counter for the list in order to organize
+                    # results
+                    i = 0
                     # while we have not fully traversed the listOfResults..
-                    while i < len(listOfResults):
+                    while i < len(stringList):
                         # pop the current item
-                        lineString = listOfResults.pop(i)
+                        lineString = stringList.pop(i)
+                        # increment i after the pop
+                        i += 1
                         # If the line corresponds to a found line...
-                        if 'Found' in lineString and \
-                                'following files:' in lineString:
+                        if 'in the following files:' in lineString:
 
                             # get the foundNumber by splitting and getting
                             # the value of the second object, which will
@@ -318,35 +332,30 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
 
                             # insert the number of found results into
                             # the current index
-                            foundResults.insert(i, foundNumber)
-                            foundResults.append()
+                            # foundResults.append(i, foundNumber)
+                            lineString = stringList.pop(i)
+                            i +=1
+
                         # else, if this line is stating the files that
                         # Simian is detecting duplicates between...
-                        elif 'Between lines' in lineString:
+                        if 'Between lines' in lineString:
                             # parse the path by splitting by spaces,
                             # but critically stopping the split
                             # before we would hit the file name,
                             # where there could be spaces in the Directory
                             # which throw off results
-                            foundFileName = lineString.split(' ', 6)[6]
+                            foundFileName = lineString.split(' ', 7)[7]
 
                             # insert a nested result within the index
                             # of our foundNumber
-                            foundResults.insert(i, foundFileName + '[' + str(foundNumber) + ']')
-                        # else, if an error happens
-                        else:
-                            # raise RuntimeError('An unknown error occured.')
-                            if self.Ui_ErrorDialog is None:
-                                self.Ui_ErrorDialog = Ui_ErrorDialog()
-                            self.Ui_ErrorDialog.ErrorText\
-                                .setText('An unknown error occured.')
-                            self.Ui_ErrorDialog.show()
-                        # increment i at the end
-                        i += 1
+                            foundResults.append(foundFileName + f'[{foundNumber}]')
+
+                                # self.ResultsTable.addItem(lineString)
+
                     # when we have finished generating the list, sort
                     # with a helper method to sort by the highest number of
                     # results to the lowest results
-                    foundResults.sort(reverse=True, key=sortList(foundNumber))
+                    # foundResults.sort(reverse=True, key=sortList(foundNumber))
 
                     # If the table has results from a prior result
                     if self.ResultsTable.count() > 0:
@@ -355,13 +364,19 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
 
                     # add this list entirely to the ResultsTable QListWidget
                     self.ResultsTable.addItems(foundResults)
-                    print('found Results = ' + foundResults)
-                    print('ResultsTable Results =' + self.ResultsTable)
+                    self.ResultsTable.sortItems()
 
 
 # sorter for the foundResults list in runSimian
 def sortList(sorter):
     return sorter['foundNumber']
+
+
+# Translate asset paths to useable format for PyInstaller
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath('.'), relative_path)
 
 
 def main():

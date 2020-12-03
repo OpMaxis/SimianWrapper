@@ -339,7 +339,7 @@ p, li { white-space: pre-wrap; }
        <bool>false</bool>
       </property>
       <property name="selectionMode">
-       <enum>QAbstractItemView::ExtendedSelection</enum>
+       <enum>QAbstractItemView::MultiSelection</enum>
       </property>
       <property name="textElideMode">
        <enum>Qt::ElideRight</enum>
@@ -542,11 +542,28 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>FileDirectoryText</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SimianWindow</receiver>
+   <slot>enforceLineEditSuffix()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>686</x>
+     <y>16</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>314</x>
+     <y>35</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>browseDir()</slot>
   <slot>openSetup()</slot>
   <slot>runSimian()</slot>
   <slot>runKdiff3()</slot>
+  <slot>enforceLineEditSuffix()</slot>
  </slots>
 </ui>

@@ -18,7 +18,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtCore import pyqtSlot, QObject
+from PyQt5.QtCore import pyqtSlot, QObject, QStandardPaths
 import sys
 import os
 import configparser
@@ -31,7 +31,7 @@ class Ui_SimianSetup(QtWidgets.QMainWindow):
         self.dialog = None
 
         # set the dirpath which will be used by the file saving and restoring
-        self.dirPath = ("../settings.ini")
+        self.dirPath = resource_path(("settings.ini"))
 
         # UI initialization; dynamic and based off of the correspoinding .ui
         # file, meaning changing the GUI in Qt Designer will result in an
@@ -114,10 +114,16 @@ class Ui_SimianSetup(QtWidgets.QMainWindow):
         write_config.set("fileDirsSaved", "kDiff3WorkFileDir", self.Kdiff3FileDirLine.text())
         write_config.set("fileDirsSaved", "simianWorkFileDir", self.simianFileDirLine.text())
         # open the iniFile...
-        with open((os.path.join(os.pardir, 'settings.ini')), mode='w') as iniFile:
+        with open((self.dirPath), mode='w') as iniFile:
             # write the directories to file, then close it
             write_config.write(iniFile)
 
+
+# Translate asset paths to useable format for PyInstaller
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath('.'), relative_path)
 
 # This code initializes the window with the specified ui file.
 def main():
