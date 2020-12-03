@@ -69,6 +69,15 @@ Thumbs.db
 
 # Python test files
 *test.py
+*qtFunctions.py
+
+# Unimplemented files
+*copy
+
+# Build Folders and files
+build/
+dist/
+*.spec
 
 # Python byte code
 *.pyc

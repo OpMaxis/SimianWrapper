@@ -23,7 +23,7 @@ The following dependencies are called by SimianWrapper:
 
 os: https://docs.python.org/3/library/os.html
 
-PyYAML: https://pyyaml.org/
+configparser: https://docs.python.org/3/library/configparser.html
 
 PyQt5: https://pypi.org/project/PyQt5/
 
