@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>867</width>
+    <width>884</width>
     <height>504</height>
    </rect>
   </property>
@@ -285,23 +285,6 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QLabel" name="SimianResultsLabel">
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Simian Results Table</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
     <item row="8" column="13">
      <widget class="QPushButton" name="simianSetupButton">
       <property name="sizePolicy">
@@ -321,13 +304,36 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </item>
+    <item row="1" column="0" colspan="3">
+     <widget class="QLabel" name="SimianResultsLabel">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Simian Results Table</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="0" rowspan="5" colspan="9">
-     <widget class="QListWidget" name="ResultsTable">
+     <widget class="QTreeWidget" name="ResultsTable">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>282</width>
+        <height>411</height>
+       </size>
       </property>
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
@@ -338,12 +344,46 @@ p, li { white-space: pre-wrap; }
       <property name="showDropIndicator" stdset="0">
        <bool>false</bool>
       </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
       <property name="selectionMode">
-       <enum>QAbstractItemView::MultiSelection</enum>
+       <enum>QAbstractItemView::ExtendedSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
       </property>
       <property name="textElideMode">
-       <enum>Qt::ElideRight</enum>
+       <enum>Qt::ElideLeft</enum>
       </property>
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="animated">
+       <bool>true</bool>
+      </property>
+      <property name="allColumnsShowFocus">
+       <bool>false</bool>
+      </property>
+      <attribute name="headerMinimumSectionSize">
+       <number>50</number>
+      </attribute>
+      <attribute name="headerDefaultSectionSize">
+       <number>180</number>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>Fingerprint</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string># of Dupes</string>
+       </property>
+      </column>
      </widget>
     </item>
    </layout>
@@ -523,22 +563,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>554</x>
      <y>430</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>clearResultsButton</sender>
-   <signal>clicked()</signal>
-   <receiver>ResultsTable</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>258</x>
-     <y>458</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>259</x>
-     <y>431</y>
     </hint>
    </hints>
   </connection>

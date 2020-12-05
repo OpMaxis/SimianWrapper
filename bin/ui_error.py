@@ -28,9 +28,9 @@ class Ui_ErrorDialog(QtWidgets.QDialog):
         # UI initialization; dynamic and based off of the correspoinding .ui
         # file, meaning changing the GUI in Qt Designer will result in an
         # immediate change to the file.
-        uiPath = '/SimianWrapper/ui'
+        uiPath = '/ui'
         super(Ui_ErrorDialog, self).__init__()
-        uic.loadUi(os.path.join(os.pardir, uiPath, 'error.ui'), self)
+        uic.loadUi('error.ui', self)
 
         ''' The following code block imports all the event handlers with custom
         functions, or data that is required for custom event handling.'''
@@ -40,8 +40,16 @@ class Ui_ErrorDialog(QtWidgets.QDialog):
 
         self.show()
 
-    # This code initializes the window with the specified ui file.
-    def main():
-        app = QtWidgets.QApplication(sys.argv)
-        ui = Ui_ErrorDialog()
-        sys.exit(app.exec_())
+
+# Translate asset paths to useable format for PyInstaller
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath('.'), relative_path)
+
+
+# This code initializes the window with the specified ui file.
+def main():
+    app = QtWidgets.QApplication(sys.argv)
+    ui = Ui_ErrorDialog()
+    sys.exit(app.exec_())

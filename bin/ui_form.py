@@ -41,9 +41,9 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
         # UI initialization; dynamic and based off of the correspoinding .ui
         # file, meaning changing the GUI in Qt Designer will result in an
         # immediate change to the file.
-        uiPath = '/SimianWrapper/ui'
+        uiPath = '/ui'
         super(Ui_SimianWindow, self).__init__()
-        uic.loadUi(os.path.join(os.pardir, uiPath, 'form.ui'), self)
+        uic.loadUi('form.ui', self)
 
         ''' The following code block imports all the event handlers with custom
         functions, or data that is required for custom event handling.'''
