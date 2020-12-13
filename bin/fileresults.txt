@@ -1,8 +1,0 @@
-{'c702eb2b6378b3efb9b8b0c2e3b4ece2': 
-{'G:\\testfiles\\Dates\\Program 05.txt': 6, 'G:\\testfiles\\Dates\\Program 03.txt': 6, 'G:\\testfiles\\Dates\\Program 06.txt': 6, 'G:\\testfiles\\Dates\\Program 04.txt': 6, 'G:\\testfiles\\Dates\\Program 01.txt': 6, 'G:\\testfiles\\Dates\\Program 13.txt': 6}, 
-'51ca6d51492151a8b4619b55b522f44c': 
-{'G:\\testfiles\\Dates\\Program 06.txt': 12, 'G:\\testfiles\\Dates\\Program 13.txt': 12, 'G:\\testfiles\\Dates\\Program 18.txt': 12}, 
-'599b109e36f7fac3031002f267871907': 
-{'G:\\testfiles\\Dates\\Program 14.txt': 27}, 
-'c39995b9479879f50d9956e045abd374': 
-{'G:\\testfiles\\Dates\\Program 11.txt': 37}}      
