@@ -16,8 +16,9 @@
 # https://www.gnu.org/licenses/gpl-3.0.en.html
 #################
 
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtCore import pyqtSlot, QStandardPaths
+from PyQt5 import QtCore, QtWidgets, uic
+from PyQt5.QtCore import pyqtSlot
+from TreeWidgetItem import TreeWidgetItem
 from ui_setup import Ui_SimianSetup
 from ui_error import Ui_ErrorDialog
 import sys
@@ -41,9 +42,8 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
         # UI initialization; dynamic and based off of the correspoinding .ui
         # file, meaning changing the GUI in Qt Designer will result in an
         # immediate change to the file.
-        uiPath = '/ui'
         super(Ui_SimianWindow, self).__init__()
-        uic.loadUi('form.ui', self)
+        uic.loadUi('./ui/form.ui', self)
 
         ''' The following code block imports all the event handlers with custom
         functions, or data that is required for custom event handling.'''
@@ -103,23 +103,10 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
 
         # create a file list from the selected items on the resultsTable
         listOfResults = self.ResultsTable.selectedItems()
-        newList = []
-
-        # for the number of results on the selected items, append it to the end of the list
-        for x in listOfResults:
-            newList.append(x)
-
-        file1 = newList[0]
-        file2 = newList[1]
-
-        newFile1 = file1.text()
-        newFile2 = file2.text()
-        # if the list of results is less than 3, set file3 to none
-        if len(listOfResults) < 3:
-            file3 = None
-        else:
-            file3 = newList[2]
-            newFile3 = file3.text()
+        # set a list of three items from the selected items
+        # file1 = str()
+        # file2 = str()
+        # file3 = str()
 
         # call a read_config object to read from file
         read_config = configparser.ConfigParser()
@@ -143,9 +130,8 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
             self.Ui_ErrorDialog.ErrorText\
                 .setText("Your Kdiff3 Working File directory is invalid.")
             self.Ui_ErrorDialog.show()
-            pass
         # else if the list is empty due to no selections...
-        elif not bool(newList):
+        elif not bool(listOfResults):
             # raise IndexError("You must select items in the table.")
             if self.Ui_ErrorDialog is None:
                 self.Ui_ErrorDialog = Ui_ErrorDialog()
@@ -153,66 +139,72 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
                 .setText("You must select items in the table.")
             self.Ui_ErrorDialog.show()
         # if there were less than 2 items selected, or more than 3 items..
-        elif len(newList) > 2 or len(newList) < 3:
-            # raise UnboundLocalError("You must select 2 or 3 items to compare or merge.")
-            if self.Ui_ErrorDialog is None:
-                self.Ui_ErrorDialog = Ui_ErrorDialog()
-            self.Ui_ErrorDialog.ErrorText\
-                .setText("You must select 2 or 3 items to compare or merge.")
-            self.Ui_ErrorDialog.show()
+        # elif len(listOfResults) > 2 or len(listOfResults) < 3:
+        #     # raise UnboundLocalError("You must select 2 or 3 items to compare or merge.")
+        #     if self.Ui_ErrorDialog is None:
+        #         self.Ui_ErrorDialog = Ui_ErrorDialog()
+        #     self.Ui_ErrorDialog.ErrorText\
+        #         .setText("You must select 2 or 3 items to compare or merge.")
+        #     self.Ui_ErrorDialog.show()
             # call ErrorHandler with an UnboundLocalError()
             # globalFunctions.errorHandler(self, UnboundLocalError)
-            pass
+        # if the length of the list of results is between the acceptable range...
         else:
             # if the selected item list is composed of 2 items...
-            if len(newList) == 2:
+            if len(listOfResults) == 2:
+
+                # # set a list of two items from the selected items
+                file1 = listOfResults[0].text(0)
+                file2 = listOfResults[1].text(0)
 
                 # if the merge button is checked...
                 if self.Kdiff3MergeButton.isChecked():
 
                     # if there is no supplied output file, assume a merger
                     if outputFile is None:
-                        subprocess.run([kDiff3FileDir, newFile1, newFile2, '-m'])
+                        subprocess.run([kDiff3FileDir, file1, file2, '-m'])
 
                     # else, run kDiff3 with the output file being generated
                     else:
-                        subprocess.run([kDiff3FileDir, newFile1, newFile2, '-o',
+                        subprocess.run([kDiff3FileDir, file1, file2, '-o',
                                         outputFile])
 
                 # if the merge button is not checked,
                 # just do a compare operation
                 else:
-                    subprocess.run([kDiff3FileDir, newFile1, newFile2])
+                    subprocess.run([kDiff3FileDir, file1, file2])
 
             # else, if the file list length is 3...
-            elif len(newList) == 3:
-
+            elif len(listOfResults) == 3:
+                file1 = listOfResults[0].text(0)
+                file2 = listOfResults[1].text(0)
+                file3 = listOfResults[2].text(0)
                 # check if the merge button is checked...
                 if self.Kdiff3MergeButton.isChecked():
 
                     # if there is no outputFile, assume a merger...
                     if outputFile is None:
-                        subprocess.run([kDiff3FileDir, newFile1, newFile2, newFile3,
+                        subprocess.run([kDiff3FileDir, file1, file2, file3,
                                         '-m'])
 
                     # else, run kDiff3 with the output file being generated
                     else:
-                        subprocess.run([kDiff3FileDir, newFile1, newFile2, newFile3,
+                        subprocess.run([kDiff3FileDir, file1, file2, file3,
                                         '-o', outputFile])
 
                 # if there is no merge button checked, just run a compare
                 else:
-                    subprocess.run([kDiff3FileDir, newFile1, newFile2, newFile3])
+                    subprocess.run([kDiff3FileDir, file1, file2, file3])
 
-            # else, if an unknown error occurs...
-            else:
-                # raise RuntimeError() and tell them we don't know what happened
-                if self.Ui_ErrorDialog is None:
-                    self.Ui_ErrorDialog = Ui_ErrorDialog()
-                self.Ui_ErrorDialog.ErrorText\
-                    .setText("An unknown error has occurred.")
-                self.Ui_ErrorDialog.show()
-                # errorHandler(self, RuntimeError)
+        # # else, if an unknown error occurs...
+        # else:
+        #     # raise RuntimeError() and tell them we don't know what happened
+        #     if self.Ui_ErrorDialog is None:
+        #         self.Ui_ErrorDialog = Ui_ErrorDialog()
+        #     self.Ui_ErrorDialog.ErrorText\
+        #         .setText("An unknown error has occurred.")
+        #     self.Ui_ErrorDialog.show()
+            # errorHandler(self, RuntimeError)
 
     # This method forces the postfix of /* onto the file to satisfy the
     # demands of subprocess's arguments
@@ -268,108 +260,172 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
             combinedArgs.insert(0, simianWorkFileDir)
             # put the openedFileDir at the end of the argument list
             combinedArgs.append('-failOnDuplication-')
+            # combinedArgs.append()
             combinedArgs.append(self.FileDirectoryText.text())
 
             # contentText stores the output gathered from
             # Simian.exe with combinedArgs, with the additional
             # parameters setting the file to save as a string
             # with utf-8 encoding
-            try:
-                contentText = \
-                    subprocess.check_output(combinedArgs, text=True, encoding="utf-8", stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
+            contentText = \
+                subprocess.check_output(combinedArgs, text=True, encoding="utf-8", stderr=subprocess.STDOUT)
+            # Split the text into multiple lines of
+            stringList = contentText.splitlines()
+
+            # if there are no results for duplicates from Simian...
+            # NOTE: This outcome also occurs if the openedFileDir is
+            # invalid. This behavior is native to Simian's processing.
+            if 'Found 0 duplicate lines in 0 blocks in 0 files' \
+                    in stringList:
+                # make an empty dict out of foundResults
+                # that will be populated
+                foundResults = dict()
+                # end early, setting foundNumber to 0
+                foundNumber = 0
+                # insert a single column into the list
+                # foundResults.append(QTreeWidgetItem(None, QStringList(QString())))
+                foundResults.update({"Number of Results": 0})
+
+                # clear the table prematurely
+                self.ResultsTable.clear()
+
+                # add this item to the resultsTable
+                fillWidget(self.ResultsTable, foundResults)
+
+            # else, if there are duplicates
             else:
-                # Split the text into multiple lines of
-                stringList = contentText.split("\n")
+                # make an empty dict out of foundResults
+                # that will be populated
+                foundResults = dict()
 
+                # for a full iteration through all strings from the output
+                for x in range(len(stringList)):
 
-                # if there are no results for duplicates from Simian...
-                # NOTE: This outcome also occurs if the openedFileDir is
-                # invalid. This behavior is native to Simian's processing.
-                if 'Found 0 duplicate lines in 0 blocks in 0 files' \
-                        in stringList:
-                    # make an empty List out of foundResults
-                    # that will be populated
-                    foundResults = []
-                    # end early, setting foundNumber to 0
-                    foundNumber = 0
-                    # insert a single column into the list
-                    # foundResults.append(QTreeWidgetItem(None, QStringList(QString())))
-                    foundResults.append("0 results.")
+                    # iterate through each lineString as an individual line
+                    lineString = stringList[x]
 
-                    # If the table has results from a prior result
-                    if self.ResultsTable.count() > 0:
-                        # clear the table prematurely
-                        self.ResultsTable.clear()
+                    # If the line corresponds to a found line...
+                    if 'in the following files:' in lineString:
 
-                    # add this item to the resultsTable
-                    self.ResultsTable.addItems(foundResults)
+                        # get the foundNumber by splitting and getting
+                        # the value of the second object, which will
+                        # always be the number
+                        foundNumber = int(lineString.split(' ')[1])
 
-                # else, if there are duplicates
-                else:
-                    # make an empty List out of foundResults
-                    # that will be populated
-                    foundResults = []
-                    foundNumber = int()
-                    # initialize a counter for the list in order to organize
-                    # results
-                    i = 0
-                    # while we have not fully traversed the listOfResults..
-                    while i < len(stringList):
-                        # pop the current item
-                        lineString = stringList.pop(i)
-                        # increment i after the pop
-                        i += 1
-                        # If the line corresponds to a found line...
-                        if 'in the following files:' in lineString:
+                        # fingerprint splits at the seventh string, where it
+                        # always will be present
+                        fingerprint = lineString.split(' ')[6]
 
-                            # get the foundNumber by splitting and getting
-                            # the value of the second object, which will
-                            # always be the number
-                            foundNumber = int(lineString.split(' ')[1])
-                            # fingerprint = lineString.split(' ')[6]
+                        # Add the fingerprint and number into the dictionary
+                        # at the base, foundNumber as a list which holds a set.
+                        # that set holds our foundFileNames
+                        # (a set so that duplicate results are ignored)
+                        foundResults[fingerprint] = (foundNumber, set())
 
-                            # insert the number of found results into
-                            # the current index
-                            # foundResults.append(i, foundNumber)
-                            lineString = stringList.pop(i)
-                            i +=1
+                    # if this line is stating the files that
+                    # Simian is detecting duplicates between...
+                    if 'Between lines' in lineString:
 
-                        # else, if this line is stating the files that
-                        # Simian is detecting duplicates between...
-                        if 'Between lines' in lineString:
-                            # parse the path by splitting by spaces,
-                            # but critically stopping the split
-                            # before we would hit the file name,
-                            # where there could be spaces in the Directory
-                            # which throw off results
-                            foundFileName = lineString.split(' ', 7)[7]
+                        # parse the path by splitting by spaces,
+                        # but critically stopping the split
+                        # before we would hit the file name,
+                        # where there could be spaces in the Directory
+                        # which throw off results
+                        foundFileName = lineString.split(' ', 7)[7]
 
-                            # insert a nested result within the index
-                            # of our foundNumber
-                            foundResults.append(foundFileName + f'[{foundNumber}]')
+                        # insert a nested result within the set
+                        # of our foundNumber,
+                        # which will always be the second number
+                        foundResults[fingerprint][1].add(foundFileName)
 
-                                # self.ResultsTable.addItem(lineString)
+                # clear the widget before loading new results
+                self.ResultsTable.clear()
 
-                    # when we have finished generating the list, sort
-                    # with a helper method to sort by the highest number of
-                    # results to the lowest results
-                    # foundResults.sort(reverse=True, key=sortList(foundNumber))
+                # sort the widget by the second column, in descending order
+                self.ResultsTable.sortItems(1, 1)
 
-                    # If the table has results from a prior result
-                    if self.ResultsTable.count() > 0:
-                        # clear the table prematurely
-                        self.ResultsTable.clear()
-
-                    # add this list entirely to the ResultsTable QListWidget
-                    self.ResultsTable.addItems(foundResults)
-                    self.ResultsTable.sortItems()
+                # add this list entirely to the ResultsTable QListWidget
+                fillWidget(self.ResultsTable, foundResults)
 
 
 # sorter for the foundResults list in runSimian
 def sortList(sorter):
     return sorter['foundNumber']
+
+
+# This method is used in runSimian to generate results from the gathered dictionary
+def fillTreeItems(item, value):
+    def newItem(parent, key, val):
+        # create a custom TreeWidgetItem with integer/float sorting
+        child = TreeWidgetItem()
+
+        # if the passed in value is a dictionary object...
+        if isinstance(value, dict):
+
+            # set the child TreeWidgetItem first column to the fingerprint key
+            child.setText(0, key)
+
+            # set the child TreeWidgetItem second column to the number of dupes
+            child.setText(1, str(val[0]))
+
+        # if the passed in sequence is a tuple...
+        if isinstance(value, tuple):
+            # recursive call to go through the nested values of the dictionary
+            # fillTreeItems(child, val)
+            # traverse deeper into the list's second item, the set
+
+            # # if the passed in sequence is a set...
+            # if isinstance(value, set):
+            # for each value in the set...
+            # set the text to each item from the set
+            pass
+        if isinstance(value, set):
+            child.setText(0, key)
+
+        # add the child to the parent QTreeWidget
+        parent.addChild(child)
+
+        # automatically expand the column
+        child.setExpanded(True)
+
+        # recursive call to go through the nested values of the dictionary
+        fillTreeItems(child, val)
+
+
+    # recursion escape clause, terminates the recursion
+    # if there are no more items
+    if value is None:
+        return
+    # else, if the initial passed in value is a dictionary ...
+    elif isinstance(value, dict):
+
+        # for each key - value pair in the dictionary
+        for key, val in value.items():
+
+            # call the newItem initialization method (not recursion)
+            newItem(item, str(key), val)
+
+    # else if the value is another sequence object from Python's library...
+    elif isinstance(value, (list, tuple, set)):
+        # for each value in the sequence...
+        for val in value:
+            # set the key to the string value if it is not a Python object
+            # else, set it to the string formatted name value
+            key = (str(val) if not isinstance(val, (dict, list, tuple, set))
+                    else '[%s]' % type(val).__name__)
+
+            # call the newItem initialization method (not recursion)
+            newItem(item, key, val)
+    # # if the value is neither, run the value through as a raw string
+    # else:
+    #     newItem(item, str(value))
+
+
+# This method is used as a helper method to launch fillTreeItems(item, sequence)
+def fillWidget(widget, value):
+    # calls tree items at the baseline
+    fillTreeItems(widget.invisibleRootItem(), value)
+
 
 
 # Translate asset paths to useable format for PyInstaller

@@ -162,7 +162,7 @@
  <connections>
   <connection>
    <sender>simianFileDirButton</sender>
-   <signal>clicked()</signal>
+   <signal>pressed()</signal>
    <receiver>SimianSetup</receiver>
    <slot>browseFileSimian()</slot>
    <hints>
@@ -178,7 +178,7 @@
   </connection>
   <connection>
    <sender>Kdiff3FileDirButton</sender>
-   <signal>clicked()</signal>
+   <signal>pressed()</signal>
    <receiver>SimianSetup</receiver>
    <slot>browseFileKdiff3()</slot>
    <hints>
