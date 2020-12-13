@@ -28,9 +28,8 @@ class Ui_ErrorDialog(QtWidgets.QDialog):
         # UI initialization; dynamic and based off of the correspoinding .ui
         # file, meaning changing the GUI in Qt Designer will result in an
         # immediate change to the file.
-        uiPath = '/ui'
         super(Ui_ErrorDialog, self).__init__()
-        uic.loadUi('error.ui', self)
+        uic.loadUi('./ui/error.ui', self)
 
         ''' The following code block imports all the event handlers with custom
         functions, or data that is required for custom event handling.'''
