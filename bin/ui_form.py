@@ -37,7 +37,7 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
         self.dialog = None
 
         # set the dirpath which will be used by the file saving and restoring
-        self.dirPath = resource_path(("settings.ini"))
+        self.dirPath = "settings.ini"
 
         # UI initialization; dynamic and based off of the correspoinding .ui
         # file, meaning changing the GUI in Qt Designer will result in an
@@ -103,10 +103,26 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
 
         # create a file list from the selected items on the resultsTable
         listOfResults = self.ResultsTable.selectedItems()
+        for item in listOfResults:
+            if item.columnCount == 2:
+                # Call the error handler
+                if self.Ui_ErrorDialog is None:
+                    self.Ui_ErrorDialog = Ui_ErrorDialog()
+                self.Ui_ErrorDialog.ErrorText\
+                    .setText("You have selected an item in an invalid column.")
+                self.Ui_ErrorDialog.show()
+
         # set a list of three items from the selected items
         # file1 = str()
         # file2 = str()
         # file3 = str()
+        # for i in range(len(listOfResults)):
+        #     if not str(os.path.exists(listOfResults[i].text)):
+        #         if self.Ui_ErrorDialog is None:
+        #             self.Ui_ErrorDialog = Ui_ErrorDialog()
+        #         self.Ui_ErrorDialog.ErrorText\
+        #             .setText("You must select valid file paths.")
+        #         self.Ui_ErrorDialog.show()
 
         # call a read_config object to read from file
         read_config = configparser.ConfigParser()
@@ -139,8 +155,8 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
                 .setText("You must select items in the table.")
             self.Ui_ErrorDialog.show()
         # if there were less than 2 items selected, or more than 3 items..
-        # elif len(listOfResults) > 2 or len(listOfResults) < 3:
-        #     # raise UnboundLocalError("You must select 2 or 3 items to compare or merge.")
+        # elif len(listOfResults) != 2 or len(listOfResults) != 3:
+        # #     # raise UnboundLocalError("You must select 2 or 3 items to compare or merge.")
         #     if self.Ui_ErrorDialog is None:
         #         self.Ui_ErrorDialog = Ui_ErrorDialog()
         #     self.Ui_ErrorDialog.ErrorText\
@@ -157,8 +173,15 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
                 file1 = listOfResults[0].text(0)
                 file2 = listOfResults[1].text(0)
 
+                if not os.path.isfile(file1) or \
+                        not os.path.isfile(file2):
+                    if self.Ui_ErrorDialog is None:
+                        self.Ui_ErrorDialog = Ui_ErrorDialog()
+                    self.Ui_ErrorDialog.ErrorText\
+                        .setText("You must select valid files.")
+                    self.Ui_ErrorDialog.show()
                 # if the merge button is checked...
-                if self.Kdiff3MergeButton.isChecked():
+                elif self.Kdiff3MergeButton.isChecked():
 
                     # if there is no supplied output file, assume a merger
                     if outputFile is None:
@@ -171,7 +194,7 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
 
                 # if the merge button is not checked,
                 # just do a compare operation
-                else:
+                elif not self.Kdiff3MergeButton.isChecked():
                     subprocess.run([kDiff3FileDir, file1, file2])
 
             # else, if the file list length is 3...
@@ -179,8 +202,17 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
                 file1 = listOfResults[0].text(0)
                 file2 = listOfResults[1].text(0)
                 file3 = listOfResults[2].text(0)
+
+                if not os.path.isfile(file1) or not os.path.isfile(file2) or not os.path.isfile(file3):
+                    if self.Ui_ErrorDialog is None:
+                        self.Ui_ErrorDialog = Ui_ErrorDialog()
+                    self.Ui_ErrorDialog.ErrorText\
+                        .setText("You must select valid files.")
+                    self.Ui_ErrorDialog.show()
+
+
                 # check if the merge button is checked...
-                if self.Kdiff3MergeButton.isChecked():
+                elif self.Kdiff3MergeButton.isChecked():
 
                     # if there is no outputFile, assume a merger...
                     if outputFile is None:
@@ -193,7 +225,7 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
                                         '-o', outputFile])
 
                 # if there is no merge button checked, just run a compare
-                else:
+                elif not self.Kdiff3MergeButton.isChecked():
                     subprocess.run([kDiff3FileDir, file1, file2, file3])
 
         # # else, if an unknown error occurs...
@@ -219,7 +251,7 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
             # block other signals from accessing FileDirectoryText
             self.FileDirectoryText.blockSignals(True)
             # modify the text to have the original text, plus the asterisks
-            self.FileDirectoryText.setText(text +'/*')
+            self.FileDirectoryText.setText(text + '/*')
 
             # allow it to be edited by other signals again
             self.FileDirectoryText.blockSignals(False)
@@ -352,9 +384,33 @@ class Ui_SimianWindow(QtWidgets.QMainWindow):
 def sortList(sorter):
     return sorter['foundNumber']
 
+# CUT errorHandler; did not function  as expected when called in replacement of the
+# def errorHandler(self, argument):
+#     if self.Ui_ErrorDialog is None:
+#         self.Ui_ErrorDialog = Ui_ErrorDialog()
+#     switcher = {
+#         1: self.Ui_ErrorDialog.ErrorText
+#         .setText("Your Kdiff3 Working File directory is invalid."),
+#         2: self.Ui_ErrorDialog.ErrorText
+#         .setText("You must select items in the table."),
+#         3: self.Ui_ErrorDialog.errorText
+#         .setText("You must select 2 or 3 items to compare or merge."),
+#         4: self.Ui_ErrorDialog.errorText
+#         .setText("You have selected an invalid set of values to open in Kdiff3."),
+#         5: self.Ui_ErrorDialog.ErrorText\
+#         .setText('Your directory for Simian is invalid. Please check your setup options.'),
+#     }
+#     switcher.get(argument,
+#         self.Ui_ErrorDialog.ErrorText.setText("An unknown error occurred."))
+#     self.Ui.ErrorDialog.show()
+
 
 # This method is used in runSimian to generate results from the gathered dictionary
 def fillTreeItems(item, value):
+    # it = QtWidgets.QTreeWidgetItemIterator(value,
+    #             flags=QtWidgets.QTreeWidgetItemIterator.HasChildren)
+    # it2 = QtWidgets.QTreeWidgetItemIterator(value)
+
     def newItem(parent, key, val):
         # create a custom TreeWidgetItem with integer/float sorting
         child = TreeWidgetItem()
@@ -381,16 +437,15 @@ def fillTreeItems(item, value):
             pass
         if isinstance(value, set):
             child.setText(0, key)
-
         # add the child to the parent QTreeWidget
-        parent.addChild(child)
+        # if isinstance(value, :
 
+        parent.addChild(child)
         # automatically expand the column
         child.setExpanded(True)
 
         # recursive call to go through the nested values of the dictionary
         fillTreeItems(child, val)
-
 
     # recursion escape clause, terminates the recursion
     # if there are no more items
@@ -420,6 +475,23 @@ def fillTreeItems(item, value):
     # else:
     #     newItem(item, str(value))
 
+# This method calls the save function from configparser to save the loaded file
+# as the window closes
+def saveOnExit(self, event):
+        # call a write_config to open a ConfigParser object
+        write_config = configparser.ConfigParser()
+        # add a section corresponding to our FileDirsSaved section
+        write_config.add_section('fileDirsSaved')
+        # set the corresponding dir to the text in the QLineEdit boxes
+        write_config.set("fileDirsSaved", "pickedfile", self.FileDirectoryText.text())
+        # open the iniFile...
+        with open((self.dirPath), mode='w') as iniFile:
+            # write the directories to file, then close it
+            write_config.write(iniFile)
+        #
+        super(Ui_SimianWindow, self).saveOnExit(event)
+
+
 
 # This method is used as a helper method to launch fillTreeItems(item, sequence)
 def fillWidget(widget, value):
@@ -428,17 +500,10 @@ def fillWidget(widget, value):
 
 
 
-# Translate asset paths to useable format for PyInstaller
-def resource_path(relative_path):
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, relative_path)
-    return os.path.join(os.path.abspath('.'), relative_path)
-
-
 def main():
     app = QtWidgets.QApplication(sys.argv)
     ui = Ui_SimianWindow()
-    sys.exit(app.exec_())
+    saveOnExit(self.FileDirectoryText, sys.exit(app.exec_()))
 
 
 if __name__ == '__main__':

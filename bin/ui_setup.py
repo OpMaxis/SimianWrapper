@@ -31,7 +31,7 @@ class Ui_SimianSetup(QtWidgets.QMainWindow):
         self.dialog = None
 
         # set the dirpath which will be used by the file saving and restoring
-        self.dirPath = resource_path(("settings.ini"))
+        self.dirPath = "settings.ini"
 
         # UI initialization; dynamic and based off of the correspoinding .ui
         # file, meaning changing the GUI in Qt Designer will result in an
@@ -88,7 +88,7 @@ class Ui_SimianSetup(QtWidgets.QMainWindow):
     def browseFileSimian(self):
         # calls the dialog box to open
         self.dialog = QtWidgets.QFileDialog\
-            .getOpenFileName(self, caption="Open File", filter='Executables(*.exe)')
+            .getOpenFileName(self, caption="Open File", filter='Executables(*.exe, *.jar)')
         (fileName, setFilter) = self.dialog
         self.simianFileDirLine.setText(fileName)
 
@@ -98,7 +98,7 @@ class Ui_SimianSetup(QtWidgets.QMainWindow):
     def browseFileKdiff3(self):
         # calls the dialog box to open
         self.dialog = QtWidgets.QFileDialog\
-            .getOpenFileName(self, caption="Open File", filter='Executables(*.exe)')
+            .getOpenFileName(self, caption="Open File", filter='Executables(*.exe, *.jar)')
         (fileName, setFilter) = self.dialog
         self.Kdiff3FileDirLine.setText(fileName)
 
@@ -117,12 +117,6 @@ class Ui_SimianSetup(QtWidgets.QMainWindow):
             # write the directories to file, then close it
             write_config.write(iniFile)
 
-
-# Translate asset paths to useable format for PyInstaller
-def resource_path(relative_path):
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, relative_path)
-    return os.path.join(os.path.abspath('.'), relative_path)
 
 # This code initializes the window with the specified ui file.
 def main():
